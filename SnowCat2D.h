@@ -18,16 +18,6 @@
  */
 
 //
-//  node
-//
-#import "S2Node.h"
-#import "S2Node+Hierarchy.h"
-#import "S2Node+Rendering.h"
-#import "S2Layer.h"
-#import "S2Sprite.h"
-#import "S2Label.h"
-
-//
 //  action
 //
 #import "S2Action.h"
@@ -38,7 +28,21 @@
 #import "S2ActionInterval+Visibility.h"
 
 //
-//  misc
+//  node
+//
+#import "S2Node.h"
+#import "S2Node+Hierarchy.h"
+#import "S2Node+Rendering.h"
+#import "S2Layer.h"
+#import "S2Sprite.h"
+#import "S2Label.h"
+
+//
+//  flash
+//
+
+//
+//  common
 //
 #import "s2Macros.h"
 #import "S2Log.h"
@@ -47,6 +51,7 @@
 
 #import "S2Image.h"
 #import "S2SpriteFrame.h"
+#import "S2SpriteFrameCache.h"
 #import "S2Texture.h"
 #import "S2TextureCache.h"
 
@@ -56,9 +61,5 @@
 #import "S2ActionManager.h"
 #import "S2Scheduler.h"
 #import "S2Director.h"
-
-//
-//  flash
-//
 
 NSString * snowcat2dVersion(void);
