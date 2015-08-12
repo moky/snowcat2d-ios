@@ -31,11 +31,11 @@
 - (instancetype) initWithTexture:(S2Texture *)texture rect:(CGRect)rect;
 - (instancetype) initWithTexture:(S2Texture *)texture;
 
-- (instancetype) initWithSpriteFrame:(S2SpriteFrame *)spriteFrame;
-
 - (instancetype) initWithFile:(NSString *)file rect:(CGRect)rect rotated:(BOOL)rotated;
 - (instancetype) initWithFile:(NSString *)file rect:(CGRect)rect;
 - (instancetype) initWithFile:(NSString *)file;
+
+- (instancetype) initWithSpriteFrame:(S2SpriteFrame *)spriteFrame;
 
 #pragma mark factories
 

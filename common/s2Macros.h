@@ -19,6 +19,22 @@
 #define s2sleep(seconds) usleep((seconds) * 1000000)
 #define s2difftime(timeval2, timeval1) (((timeval2).tv_sec - (timeval1).tv_sec) + ((timeval2).tv_usec - (timeval1).tv_usec) / 1000000.0f)
 
+#define CGImageCreateCopyWithImageInRect(imageRef, rect)                       \
+    ({                                                                         \
+        CGImageRef __ref = (imageRef);                                         \
+        CGRect __rect = (rect);                                                \
+        __ref = CGImageCreateWithImageInRect(__ref, __rect);                   \
+        UIImage * __img = [UIImage imageWithCGImage:__ref];                    \
+        CGImageRelease(__ref);                                                 \
+        __rect.origin = CGPointZero;                                           \
+        UIGraphicsBeginImageContext(__rect.size);                              \
+        [__img drawInRect:__rect];                                             \
+        __img = UIGraphicsGetImageFromCurrentImageContext();                   \
+        UIGraphicsEndImageContext();                                           \
+        CGImageRetain(__img.CGImage);                                          \
+    })                                                                         \
+                                    /* EOF 'CGImageCreateCopyWithImageInRect' */
+
 //--------------------------------------------------------------------- for each
 #define S2_FOR_EACH(item, array)                                               \
     for (NSEnumerator * __e = [(array) objectEnumerator];                      \

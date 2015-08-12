@@ -18,20 +18,17 @@
 #import "S2Stage.h"
 
 #ifdef S2_DEBUG
-#define kDisplayDebugInterval 0.5f /* update FPS each 0.5 second */
+#define kDisplayFPSInterval 1.0f
 #endif
 
 @interface S2Stage () {
 	
-	/* last time the main loop was updated */
+#ifdef S2_DEBUG
 	struct timeval _lastTime;
-	/* delta time since last tick to main loop */
 	s2Time _deltaTime;
-	
 	s2Time _drawTime;
-	
-	s2Time _accumTime;
 	NSUInteger _frames;
+#endif
 }
 
 @property(nonatomic, retain) NSMutableArray * children;
@@ -64,12 +61,12 @@
 	if (self) {
 		self.children = [NSMutableArray arrayWithCapacity:1];
 		self.running = NO;
-		
+#ifdef S2_DEBUG
 		gettimeofday(&_lastTime, NULL);
-		_deltaTime = FLT_EPSILON;
-		
-		_accumTime = FLT_EPSILON;
+		_deltaTime = 0.0f;
+		_drawTime = 0.0f;
 		_frames = 0;
+#endif
 	}
 	return self;
 }
@@ -105,32 +102,31 @@
 	struct timeval time2;
 	gettimeofday(&time2, NULL);
 	
-	_drawTime = s2difftime(time2, time1);
+	_drawTime += s2difftime(time2, time1);
 	NSAssert(_drawTime > 0.0f, @"time error");
 	
-	_deltaTime = s2difftime(time2, _lastTime);
+	_deltaTime += s2difftime(time2, _lastTime);
 	NSAssert(_deltaTime > 0.0f, @"time error");
 	
 	_lastTime = time2;
+	++_frames;
 	
-	[self _displayDebugInfo];
+	if (_deltaTime >= kDisplayFPSInterval) {
+		float fps = _frames / _deltaTime;
+		float dt = _drawTime / _frames;
+		[self _displayFPS:fps drawTime:dt];
+		// reset
+		_deltaTime = 0.0f;
+		_drawTime = 0.0f;
+		_frames = 0;
+	}
+	
 #endif
 }
 
 #ifdef S2_DEBUG
-- (void) _displayDebugInfo
+- (void) _displayFPS:(float)fps drawTime:(float)dt
 {
-	_accumTime += _deltaTime;
-	++_frames;
-	
-	if (_accumTime < kDisplayDebugInterval) {
-		return;
-	}
-	
-	float fps = _frames / _accumTime;
-	_accumTime = FLT_EPSILON;
-	_frames = 0;
-	
 	CATextLayer * label;
 	S2_FOR_EACH(label, self.sublayers) {
 		if ([label isKindOfClass:[CATextLayer class]]) {
@@ -151,7 +147,7 @@
 		[self addSublayer:label];
 	}
 	
-	label.string = [NSString stringWithFormat:@" FPS: %.1f\n DT: %.6fs", fps, _drawTime];
+	label.string = [NSString stringWithFormat:@" FPS: %.1f\n DT: %.6fs", fps, dt];
 }
 #endif
 

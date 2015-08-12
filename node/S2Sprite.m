@@ -29,9 +29,7 @@
 - (void) dealloc
 {
 	self.texture = nil;
-	
 	self.imageRef = NULL;
-	
 	[super dealloc];
 }
 
@@ -71,11 +69,6 @@
 	return [self initWithTexture:nil rect:CGRectZero rotated:NO];
 }
 
-- (instancetype) initWithSpriteFrame:(S2SpriteFrame *)spriteFrame
-{
-	return [self initWithTexture:spriteFrame.texture rect:spriteFrame.rect rotated:spriteFrame.rotated];
-}
-
 - (instancetype) initWithFile:(NSString *)file rect:(CGRect)rect rotated:(BOOL)rotated
 {
 	S2Texture * texture = [[S2TextureCache getInstance] addImage:file];
@@ -93,6 +86,15 @@
 	S2Texture * texture = [[S2TextureCache getInstance] addImage:file];
 	CGRect rect = CGRectMake(0.0f, 0.0f, texture.size.width, texture.size.height);
 	return [self initWithTexture:texture rect:rect rotated:NO];
+}
+
+- (instancetype) initWithSpriteFrame:(S2SpriteFrame *)spriteFrame
+{
+	self = [self initWithTexture:nil rect:spriteFrame.rect rotated:spriteFrame.rotated];
+	if (self) {
+		self.imageRef = spriteFrame.imageRef;
+	}
+	return self;
 }
 
 #pragma mark factories
@@ -225,19 +227,20 @@
 
 - (CGImageRef) imageRef
 {
-	S2Texture * texture = self.texture;
-	CGRect textureRect = self.textureRect;
-	if (!texture || textureRect.size.width <= 0.0f || textureRect.size.height <= 0.0f) {
-		NSAssert(false, @"texture error");
-		return NULL;
-	}
 	if (!_imageRef) {
-		if (CGPointEqualToPoint(textureRect.origin, CGPointZero) && CGSizeEqualToSize(textureRect.size, texture.size)) {
+		S2Texture * texture = self.texture;
+		CGRect rect = self.textureRect;
+		if (!texture || rect.size.width <= 0.0f || rect.size.height <= 0.0f) {
+			NSAssert(false, @"texture error");
+			return NULL;
+		}
+		
+		if (CGPointEqualToPoint(rect.origin, CGPointZero) && CGSizeEqualToSize(rect.size, texture.size)) {
 			// draw the whole texture
 			_imageRef = CGImageRetain(texture.imageRef);
 		} else {
 			// draw partially
-			_imageRef = CGImageCreateWithImageInRect(texture.imageRef, textureRect);
+			_imageRef = CGImageCreateWithImageInRect(texture.imageRef, rect);
 		}
 	}
 	return _imageRef;
@@ -249,14 +252,14 @@
 {
 	[super drawInContext:ctx];
 	
-	S2Texture * texture = self.texture;
+	CGImageRef image = self.imageRef;
 	CGRect rect = self.textureRect;
 	BOOL rotated = self.textureRectRotated;
 	
 	CGRect bounds = self.bounds;
 	
-	if (!texture) {
-		return; // no need to draw a sprite without texture
+	if (!image) {
+		return; // no need to draw a sprite without image
 	}
 	
 	if (rect.size.width <= 0.0f || rect.size.height <= 0.0f) {
@@ -290,7 +293,7 @@
 	
 	// 2. drawing texture
 	rect.origin = CGPointZero;
-	CGContextDrawImage(ctx, rect, [self imageRef]);
+	CGContextDrawImage(ctx, rect, image);
 	
 	// 3. restore the matrix of current context
 	CGContextConcatCTM(ctx, CGAffineTransformInvert(atm));

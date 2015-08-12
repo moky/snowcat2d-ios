@@ -6,6 +6,7 @@
 //  Copyright (c) 2015 Slanissue.com. All rights reserved.
 //
 
+#import "s2Macros.h"
 #import "S2Texture.h"
 #import "S2SpriteFrame.h"
 
@@ -26,6 +27,7 @@
 - (void) dealloc
 {
 	self.texture = nil;
+	self.imageRef = NULL;
 	[super dealloc];
 }
 
@@ -118,19 +120,28 @@
 
 - (CGImageRef) imageRef
 {
-	S2Texture * texture = self.texture;
-	CGRect rect = self.rect;
-	if (!texture || rect.size.width <= 0.0f || rect.size.height <= 0.0f) {
-		NSAssert(false, @"texture error");
-		return NULL;
-	}
 	if (!_imageRef) {
+		S2Texture * texture = self.texture;
+		CGRect rect = self.rect;
+		if (!texture || rect.size.width <= 0.0f || rect.size.height <= 0.0f) {
+			NSAssert(false, @"texture error");
+			return NULL;
+		}
+		
 		if (CGPointEqualToPoint(rect.origin, CGPointZero) && CGSizeEqualToSize(rect.size, texture.size)) {
 			// the whole texture
 			_imageRef = CGImageRetain(texture.imageRef);
 		} else {
 			// partially
-			_imageRef = CGImageCreateWithImageInRect(texture.imageRef, rect);
+			float s1 = rect.size.width + rect.size.height;
+			float s2 = texture.size.width + texture.size.height;
+			if (s1 > (s2 * 0.618f)) {
+				// too big? just retain the same image ref with new rect
+				_imageRef = CGImageCreateWithImageInRect(texture.imageRef, rect);
+			} else {
+				// too small? copy the flake to reduce the drawing consuming
+				_imageRef = CGImageCreateCopyWithImageInRect(texture.imageRef, rect);
+			}
 		}
 	}
 	return _imageRef;
