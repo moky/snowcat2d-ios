@@ -103,7 +103,11 @@
 @property(nonatomic) CGFloat skewX;
 @property(nonatomic) CGFloat skewY;
 
+/* designated initializer */
+- (instancetype) initWithFrame:(CGRect)frame;
+
 + (instancetype) node;
++ (instancetype) nodeWithFrame:(CGRect)frame;
 
 - (void) onClick;
 

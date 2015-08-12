@@ -17,17 +17,17 @@
 @interface S2LabelLine : NSObject
 
 @property(nonatomic, readwrite) CTLineRef line;
-@property(nonatomic, readwrite) CGSize size;
+@property(nonatomic, readwrite) CGRect bounds;
 
 /* designated initializer */
-- (instancetype) initWithCTLine:(CTLineRef)line size:(CGSize)size;
+- (instancetype) initWithCTLine:(CTLineRef)line bounds:(CGRect)bounds;
 
 @end
 
 @implementation S2LabelLine
 
 @synthesize line = _line;
-@synthesize size = _size;
+@synthesize bounds = _bounds;
 
 - (void) dealloc
 {
@@ -36,19 +36,19 @@
 }
 
 /* designated initializer */
-- (instancetype) initWithCTLine:(CTLineRef)line size:(CGSize)size
+- (instancetype) initWithCTLine:(CTLineRef)line bounds:(CGRect)bounds
 {
 	self = [super init];
 	if (self) {
 		self.line = line;
-		self.size = size;
+		self.bounds = bounds;
 	}
 	return self;
 }
 
 - (instancetype) init
 {
-	return [self initWithCTLine:nil size:CGSizeZero];
+	return [self initWithCTLine:nil bounds:CGRectZero];
 }
 
 - (void) setLine:(CTLineRef)line
@@ -68,6 +68,8 @@
 
 @property(nonatomic, retain) NSArray * lines;
 @property(nonatomic, readwrite) CGSize textSize;
+
+@property(nonatomic, readwrite) CTLineRef truncationToken;
 
 @end
 
@@ -92,21 +94,26 @@
 @synthesize lines = _lines;
 @synthesize textSize = _textSize;
 
+@synthesize truncationToken = _truncationToken;
+
 - (void) dealloc
 {
 	self.text = nil;
 	
-	self.color = nil;
+	self.color = NULL;
 	self.fontName = nil;
 	
 	self.lines = nil;
 	
+	self.truncationToken = NULL;
+	
 	[super dealloc];
 }
 
-- (instancetype) init
+/* designated initializer */
+- (instancetype) initWithFrame:(CGRect)frame
 {
-	self = [super init];
+	self = [super initWithFrame:frame];
 	if (self) {
 		self.text = nil;
 		
@@ -122,8 +129,24 @@
 		
 		self.lines = nil;
 		self.textSize = CGSizeZero;
+		
+		self.truncationToken = NULL;
 	}
 	return self;
+}
+
+- (instancetype) initWithText:(NSString *)text
+{
+	self = [self initWithFrame:CGRectZero];
+	if (self) {
+		self.text = text;
+	}
+	return self;
+}
+
++ (instancetype) labelWithText:(NSString *)text
+{
+	return [[[self alloc] initWithText:text] autorelease];
 }
 
 - (void) setText:(NSString *)text
@@ -188,7 +211,7 @@
 {
 	if (!_lines) {
 		CGSize textSize = CGSizeZero;
-		CGSize lineSize = CGSizeZero;
+		CGRect lineBounds = CGRectZero;
 		
 		// separate lines
 		NSAssert([_text isKindOfClass:[NSString class]], @"text empty");
@@ -212,6 +235,14 @@
 		CTLineRef line;
 		S2LabelLine * label;
 		
+		if (!_truncationToken) {
+			text = CFStringCreateWithNSString(@"...");
+			aStr = CFAttributedStringCreate(NULL, text, attrs);
+			_truncationToken = CTLineCreateWithAttributedString(aStr);
+			CFRelease(aStr);
+			CFRelease(text);
+		}
+		
 		NSString * string;
 		S2_FOR_EACH(string, array) {
 			if ([string isKindOfClass:[S2LabelLine class]]) {
@@ -225,10 +256,11 @@
 			aStr = CFAttributedStringCreate(NULL, text, attrs);
 			line = CTLineCreateWithAttributedString(aStr);
 			
-			lineSize = CTLineGetSize(line);
-			textSize = CGSizeMake(MAX(textSize.width, lineSize.width), textSize.height + lineSize.height);
+			lineBounds = CTLineGetBounds(line);
+			textSize = CGSizeMake(MAX(textSize.width, lineBounds.size.width + lineBounds.origin.x),
+								  textSize.height + lineBounds.size.height + lineBounds.origin.y);
 			
-			label = [[S2LabelLine alloc] initWithCTLine:line size:lineSize];
+			label = [[S2LabelLine alloc] initWithCTLine:line bounds:lineBounds];
 			[mArray addObject:label];
 			[label release];
 			
@@ -244,14 +276,23 @@
 		
 		[mArray release];
 		
+		textSize.height += _leading * (count - 1);
 		if (CGRectEqualToRect(_bounds, CGRectZero)) {
-			textSize.height += _leading * (count - 1);
 			self.size = CGSizeMake(_paddingLeft + textSize.width + _paddingRight,
 								   _paddingTop + textSize.height + _paddingBottom);
 		}
 		self.textSize = textSize;
 	}
 	return _lines;
+}
+
+- (void) setTruncationToken:(CTLineRef)truncationToken
+{
+	if (_truncationToken != truncationToken) {
+		CFRetainSafe(truncationToken);
+		CFReleaseSafe(_truncationToken);
+		_truncationToken = truncationToken;
+	}
 }
 
 - (void) drawInContext:(CGContextRef)ctx
@@ -274,42 +315,65 @@
 	CGContextConcatCTM(ctx, atm);
 	
 	// 2. drawing text
-	CGFloat dx, dy;
+	CGPoint position = CGPointZero;
 	if (_verticalAlignment == S2TextAlignmentTop) {
-		dy = bounds.size.height - _paddingTop;
+		position.y = bounds.size.height - _paddingTop;
 	} else if (_verticalAlignment == S2TextAlignmentBottom) {
-		dy = _textSize.height + _paddingBottom;
+		position.y = _textSize.height + _paddingBottom;
 	} else {
-		NSAssert(_verticalAlignment == S2TextAlignmentMiddle, @"default alignment middle");
-		dy = bounds.size.height * 0.5f + _textSize.height * 0.5f;
+		position.y = bounds.size.height * 0.5f + _textSize.height * 0.5f;
 	}
 	
+	CTLineRef tLine = NULL;
 	S2LabelLine * label;
-	if (_alignment == S2TextAlignmentLeft) {
-		dx = _paddingLeft;
-		S2_FOR_EACH(label, lines) {
-			dy -= label.size.height;
-			CGContextSetTextPosition(ctx, dx, dy);
-			CTLineDraw(label.line, ctx);
-			dy -= _leading;
+	S2_FOR_EACH(label, lines) {
+		position.y -= label.bounds.size.height;
+		if (position.y < _paddingBottom || position.y > (bounds.size.height - _paddingTop)) {
+			// skip this line
+			position.y -= label.bounds.origin.y + _leading;
+			continue;
 		}
-	} else if (_alignment == S2TextAlignmentRight) {
-		S2_FOR_EACH(label, lines) {
-			dx = bounds.size.width - _paddingRight - label.size.width;
-			dy -= label.size.height;
-			CGContextSetTextPosition(ctx, dx, dy);
-			CTLineDraw(label.line, ctx);
-			dy -= _leading;
+		
+		position.x = bounds.origin.x + _paddingLeft + label.bounds.origin.x;
+		if (_alignment == S2TextAlignmentCenter) {
+			position.x = (bounds.origin.x + bounds.size.width - label.bounds.size.width - label.bounds.origin.x) * 0.5f;
+		} else if (_alignment == S2TextAlignmentRight) {
+			position.x = bounds.origin.x + bounds.size.width - _paddingRight - label.bounds.size.width;
 		}
-	} else {
-		NSAssert(_alignment == S2TextAlignmentCenter, @"default alignment center");
-		S2_FOR_EACH(label, lines) {
-			dx = (bounds.size.width - label.size.width) * 0.5f;
-			dy -= label.size.height;
-			CGContextSetTextPosition(ctx, dx, dy);
-			CTLineDraw(label.line, ctx);
-			dy -= _leading;
+		
+		if ((label.bounds.origin.x + label.bounds.size.width) < (bounds.size.width - _paddingLeft - _paddingRight)) {
+			tLine = NULL;
+		} else {
+			// is the line too long?
+			CTLineTruncationType type = kCTLineTruncationMiddle;
+			if (_alignment == S2TextAlignmentLeft) {
+				type = kCTLineTruncationEnd;
+			} else if (_alignment == S2TextAlignmentRight) {
+				type = kCTLineTruncationStart;
+			}
+			tLine = CTLineCreateTruncatedLine(label.line,
+											  bounds.size.width - _paddingLeft - _paddingRight,
+											  type,
+											  _truncationToken);
+			if (tLine) {
+				CGRect b = CTLineGetBounds(tLine);
+				if (_alignment == S2TextAlignmentCenter) {
+					position.x = (bounds.origin.x + bounds.size.width - b.size.width - b.origin.x) * 0.5f;
+				} else if (_alignment == S2TextAlignmentRight) {
+					position.x = bounds.origin.x + bounds.size.width - _paddingRight - b.size.width;
+				}
+			}
 		}
+		CGContextSetTextPosition(ctx, position.x, position.y);
+		
+		if (tLine) {
+			CTLineDraw(tLine, ctx);
+			CFRelease(tLine);
+		} else {
+			CTLineDraw(label.line, ctx);
+		}
+		
+		position.y -= label.bounds.origin.y + _leading;
 	}
 	
 	// 3. restore the matrix of current context

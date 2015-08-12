@@ -23,7 +23,6 @@ typedef NS_ENUM(NSUInteger, S2TextVerticalAlignment) {
 @interface S2Label : S2Node {
 	
 	NSString * _text;
-	NSArray * _lines;
 	
 	CGColorRef _color;
 	NSString * _fontName;
@@ -56,5 +55,9 @@ typedef NS_ENUM(NSUInteger, S2TextVerticalAlignment) {
 
 @property(nonatomic, readwrite) S2TextAlignment alignment; // default is Center
 @property(nonatomic, readwrite) S2TextVerticalAlignment verticalAlignment; // default is Middle
+
+- (instancetype) initWithText:(NSString *)text;
+
++ (instancetype) labelWithText:(NSString *)text;
 
 @end

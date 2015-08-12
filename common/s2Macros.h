@@ -35,11 +35,11 @@
     })                                                                         \
                                     /* EOF 'CGImageCreateCopyWithImageInRect' */
 
-#define CTLineGetSize(line)                                                    \
+#define CTLineGetBounds(line)                                                  \
     ({                                                                         \
         CGFloat __a, __d, __l;                                                 \
         double __w = CTLineGetTypographicBounds((line), &__a, &__d, &__l);     \
-        CGSizeMake(__w, __a + __d + __l);                                      \
+        CGRectMake(0.0f, __d + __l, __w, __a);                                 \
     })                                                                         \
                                                        /* EOF 'CTLineGetSize' */
 

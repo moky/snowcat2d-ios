@@ -47,7 +47,8 @@
 	[super dealloc];
 }
 
-- (instancetype) init
+/* designated initializer */
+- (instancetype) initWithFrame:(CGRect)frame
 {
 	self = [super init];
 	if (self) {
@@ -59,9 +60,10 @@
 		
 		_isTransformDirty = _isInverseDirty = YES;
 		
-		_bounds = CGRectZero;
+		_bounds = CGRectMake(0.0f, 0.0f, frame.size.width, frame.size.height);
 		_anchorPoint = CGPointMake(0.5f, 0.5f);
-		_position = CGPointZero;
+		_position = CGPointMake(frame.origin.x + frame.size.width * 0.5f,
+								frame.origin.y + frame.size.height * 0.5f);
 		
 		_rotation = 0.0f;
 		_scaleX = _scaleY = 1.0f;
@@ -72,9 +74,19 @@
 	return self;
 }
 
+- (instancetype) init
+{
+	return [self initWithFrame:CGRectZero];
+}
+
 + (instancetype) node
 {
 	return [[[self alloc] init] autorelease];
+}
+
++ (instancetype) nodeWithFrame:(CGRect)frame
+{
+	return [[[self alloc] initWithFrame:frame] autorelease];
 }
 
 #pragma mark - setters/getters

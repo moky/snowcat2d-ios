@@ -35,10 +35,21 @@
 
 #pragma mark initializers
 
+- (instancetype) init
+{
+	return [self initWithTexture:nil rect:CGRectZero rotated:NO];
+}
+
+- (instancetype) initWithFrame:(CGRect)frame
+{
+	return [self initWithTexture:nil rect:frame rotated:NO];
+}
+
 /* designated initializer */
 - (instancetype) initWithTexture:(S2Texture *)texture rect:(CGRect)rect rotated:(BOOL)rotated
 {
-	self = [super init];
+	CGRect frame = rotated ? CGRectMake(rect.origin.x, rect.origin.y, rect.size.height, rect.size.width) : rect;
+	self = [super initWithFrame:frame];
 	if (self) {
 		self.texture = texture;
 		self.textureRect = rect;
@@ -62,11 +73,6 @@
 {
 	CGRect rect = CGRectMake(0.0f, 0.0f, texture.size.width, texture.size.height);
 	return [self initWithTexture:texture rect:rect rotated:NO];
-}
-
-- (instancetype) init
-{
-	return [self initWithTexture:nil rect:CGRectZero rotated:NO];
 }
 
 - (instancetype) initWithFile:(NSString *)file rect:(CGRect)rect rotated:(BOOL)rotated
