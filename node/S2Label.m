@@ -79,7 +79,11 @@
 @synthesize fontName = _fontName;
 @synthesize fontSize = _fontSize;
 
-@synthesize padding = _padding;
+@synthesize paddingLeft = _paddingLeft;
+@synthesize paddingTop = _paddingTop;
+@synthesize paddingRight = _paddingRight;
+@synthesize paddingBottom = _paddingBottom;
+
 @synthesize leading = _leading;
 
 @synthesize alignment = _alignment;
@@ -110,8 +114,8 @@
 		self.fontName = @"STHeitiSC-Medium";
 		self.fontSize = 12.0f;
 		
-		self.padding = 4.0f;
-		self.leading = 4.0f;
+		self.padding = 2.0f;
+		self.leading = 2.0f;
 		
 		self.alignment = S2TextAlignmentCenter;
 		self.verticalAlignment = S2TextAlignmentMiddle;
@@ -164,13 +168,20 @@
 	}
 }
 
-- (void) setAlignment:(S2TextAlignment)alignment
+- (void) setPadding:(CGFloat)padding
 {
-	if (_alignment != alignment) {
-		_alignment = alignment;
-		
-		self.lines = nil;
-	}
+	_paddingLeft = padding;
+	_paddingTop = padding;
+	_paddingRight = padding;
+	_paddingBottom = padding;
+}
+
+- (CGFloat) padding
+{
+	NSAssert(_paddingLeft == _paddingTop &&
+			 _paddingTop == _paddingRight &&
+			 _paddingRight == _paddingBottom, @"unknown which to return");
+	return _paddingLeft;
 }
 
 - (NSArray *) lines
@@ -235,7 +246,8 @@
 		
 		if (CGRectEqualToRect(_bounds, CGRectZero)) {
 			textSize.height += _leading * (count - 1);
-			self.size = CGSizeMake(textSize.width + _padding * 2.0f, textSize.height + _padding * 2.0f);
+			self.size = CGSizeMake(_paddingLeft + textSize.width + _paddingRight,
+								   _paddingTop + textSize.height + _paddingBottom);
 		}
 		self.textSize = textSize;
 	}
@@ -264,9 +276,9 @@
 	// 2. drawing text
 	CGFloat dx, dy;
 	if (_verticalAlignment == S2TextAlignmentTop) {
-		dy = bounds.size.height - _padding;
+		dy = bounds.size.height - _paddingTop;
 	} else if (_verticalAlignment == S2TextAlignmentBottom) {
-		dy = _textSize.height + _padding;
+		dy = _textSize.height + _paddingBottom;
 	} else {
 		NSAssert(_verticalAlignment == S2TextAlignmentMiddle, @"default alignment middle");
 		dy = bounds.size.height * 0.5f + _textSize.height * 0.5f;
@@ -274,7 +286,7 @@
 	
 	S2LabelLine * label;
 	if (_alignment == S2TextAlignmentLeft) {
-		dx = _padding;
+		dx = _paddingLeft;
 		S2_FOR_EACH(label, lines) {
 			dy -= label.size.height;
 			CGContextSetTextPosition(ctx, dx, dy);
@@ -283,7 +295,7 @@
 		}
 	} else if (_alignment == S2TextAlignmentRight) {
 		S2_FOR_EACH(label, lines) {
-			dx = bounds.size.width - _padding - label.size.width;
+			dx = bounds.size.width - _paddingRight - label.size.width;
 			dy -= label.size.height;
 			CGContextSetTextPosition(ctx, dx, dy);
 			CTLineDraw(label.line, ctx);

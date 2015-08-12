@@ -29,7 +29,11 @@ typedef NS_ENUM(NSUInteger, S2TextVerticalAlignment) {
 	NSString * _fontName;
 	CGFloat _fontSize;
 	
-	CGFloat _padding;
+	CGFloat _paddingLeft;
+	CGFloat _paddingTop;
+	CGFloat _paddingRight;
+	CGFloat _paddingBottom;
+	
 	CGFloat _leading;
 	
 	S2TextAlignment _alignment;
@@ -43,6 +47,11 @@ typedef NS_ENUM(NSUInteger, S2TextVerticalAlignment) {
 @property(nonatomic, readwrite) CGFloat fontSize;
 
 @property(nonatomic, readwrite) CGFloat padding;
+@property(nonatomic, readwrite) CGFloat paddingLeft;
+@property(nonatomic, readwrite) CGFloat paddingTop;
+@property(nonatomic, readwrite) CGFloat paddingRight;
+@property(nonatomic, readwrite) CGFloat paddingBottom;
+
 @property(nonatomic, readwrite) CGFloat leading; // row spacing
 
 @property(nonatomic, readwrite) S2TextAlignment alignment; // default is Center
