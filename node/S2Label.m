@@ -14,32 +14,88 @@
 #import "S2Node+Rendering.h"
 #import "S2Label.h"
 
-@interface S2Label ()
+@interface S2LabelLine : NSObject
 
 @property(nonatomic, readwrite) CTLineRef line;
+@property(nonatomic, readwrite) CGSize size;
+
+/* designated initializer */
+- (instancetype) initWithCTLine:(CTLineRef)line size:(CGSize)size;
+
+@end
+
+@implementation S2LabelLine
+
+@synthesize line = _line;
+@synthesize size = _size;
+
+- (void) dealloc
+{
+	self.line = nil;
+	[super dealloc];
+}
+
+/* designated initializer */
+- (instancetype) initWithCTLine:(CTLineRef)line size:(CGSize)size
+{
+	self = [super init];
+	if (self) {
+		self.line = line;
+		self.size = size;
+	}
+	return self;
+}
+
+- (instancetype) init
+{
+	return [self initWithCTLine:nil size:CGSizeZero];
+}
+
+- (void) setLine:(CTLineRef)line
+{
+	if (_line != line) {
+		CFRetainSafe(line);
+		CFReleaseSafe(_line);
+		_line = line;
+	}
+}
+
+@end
+
+#pragma mark -
+
+@interface S2Label ()
+
+@property(nonatomic, retain) NSArray * lines;
+@property(nonatomic, readwrite) CGSize textSize;
 
 @end
 
 @implementation S2Label
 
 @synthesize text = _text;
-@synthesize color = _color;
 
+@synthesize color = _color;
 @synthesize fontName = _fontName;
 @synthesize fontSize = _fontSize;
 
-@synthesize alignment = _alignment;
+@synthesize padding = _padding;
+@synthesize leading = _leading;
 
-@synthesize line = _line;
+@synthesize alignment = _alignment;
+@synthesize verticalAlignment = _verticalAlignment;
+
+@synthesize lines = _lines;
+@synthesize textSize = _textSize;
 
 - (void) dealloc
 {
 	self.text = nil;
-	self.color = nil;
 	
+	self.color = nil;
 	self.fontName = nil;
 	
-	self.line = NULL;
+	self.lines = nil;
 	
 	[super dealloc];
 }
@@ -49,14 +105,19 @@
 	self = [super init];
 	if (self) {
 		self.text = nil;
-		self.color = [UIColor blackColor].CGColor;
 		
+		self.color = [UIColor blackColor].CGColor;
 		self.fontName = @"STHeitiSC-Medium";
 		self.fontSize = 12.0f;
 		
-		self.alignment = S2TextAlignmentCenter;
+		self.padding = 4.0f;
+		self.leading = 4.0f;
 		
-		self.line = NULL;
+		self.alignment = S2TextAlignmentCenter;
+		self.verticalAlignment = S2TextAlignmentMiddle;
+		
+		self.lines = nil;
+		self.textSize = CGSizeZero;
 	}
 	return self;
 }
@@ -68,7 +129,7 @@
 		[_text release];
 		_text = text;
 		
-		self.line = NULL;
+		self.lines = nil;
 	}
 }
 
@@ -79,7 +140,7 @@
 		CGColorRelease(_color);
 		_color = color;
 		
-		self.line = NULL;
+		self.lines = nil;
 	}
 }
 
@@ -90,7 +151,7 @@
 		[_fontName release];
 		_fontName = fontName;
 		
-		self.line = NULL;
+		self.lines = nil;
 	}
 }
 
@@ -99,7 +160,7 @@
 	if (_fontSize != fontSize) {
 		_fontSize = fontSize;
 		
-		self.line = NULL;
+		self.lines = nil;
 	}
 }
 
@@ -108,57 +169,86 @@
 	if (_alignment != alignment) {
 		_alignment = alignment;
 		
-		self.line = NULL;
+		self.lines = nil;
 	}
 }
 
-- (void) setLine:(CTLineRef)line
+- (NSArray *) lines
 {
-	if (_line != line) {
-		CFRetain(line);
-		CFRelease(_line);
-		_line = line;
-	}
-}
-
-- (CTLineRef) line
-{
-	if (!_line) {
+	if (!_lines) {
+		CGSize textSize = CGSizeZero;
+		CGSize lineSize = CGSizeZero;
+		
+		// separate lines
+		NSAssert([_text isKindOfClass:[NSString class]], @"text empty");
+		NSArray * array = [_text componentsSeparatedByString:@"\n"];
+		NSUInteger count = [array count];
+		if (count == 0) {
+			NSAssert(false, @"lines count = 0");
+			return nil;
+		}
+		NSMutableArray * mArray = [[NSMutableArray alloc] initWithCapacity:count];
+		
+		// text attributes
 		CTFontRef font = CTFontCreateWithName(CFStringCreateWithNSString(_fontName), _fontSize, NULL);
 		CGColorRef color = _color;
-		// Create attributes
 		CFStringRef keys[] = {kCTFontAttributeName, kCTForegroundColorAttributeName};
 		CFTypeRef values[] = {font, color};
 		CFDictionaryRef attrs = CFDictionaryCreateWithKeysAndValues(keys, values);
 		
-		CFStringRef text = CFStringCreateWithNSString(_text);
-		CFAttributedStringRef string = CFAttributedStringCreate(NULL, text, attrs);
+		CFStringRef text;
+		CFAttributedStringRef aStr;
+		CTLineRef line;
+		S2LabelLine * label;
 		
-		_line = CTLineCreateWithAttributedString(string);
+		NSString * string;
+		S2_FOR_EACH(string, array) {
+			if ([string isKindOfClass:[S2LabelLine class]]) {
+				[mArray addObject:string];
+				continue;
+			}
+			NSAssert([string isKindOfClass:[NSString class]], @"each line must be a string");
+			// trim
+			
+			text = CFStringCreateWithNSString(string);
+			aStr = CFAttributedStringCreate(NULL, text, attrs);
+			line = CTLineCreateWithAttributedString(aStr);
+			
+			lineSize = CTLineGetSize(line);
+			textSize = CGSizeMake(MAX(textSize.width, lineSize.width), textSize.height + lineSize.height);
+			
+			label = [[S2LabelLine alloc] initWithCTLine:line size:lineSize];
+			[mArray addObject:label];
+			[label release];
+			
+			CFRelease(line);
+			CFRelease(aStr);
+			CFRelease(text);
+		}
 		
-		CFRelease(string);
-		CFRelease(text);
-		
+		self.lines = mArray;
+
 		CFRelease(attrs);
 		CFRelease(font);
 		
-		// set bounds to fit the line
+		[mArray release];
+		
 		if (CGRectEqualToRect(_bounds, CGRectZero)) {
-			CGRect rect = CTLineGetBoundsWithOptions(_line, kCTLineBoundsIncludeLanguageExtents);
-			CGFloat w = rect.size.width - rect.origin.x;
-			CGFloat h = rect.size.height - rect.origin.y;
-			self.bounds = CGRectMake(0.0f, 0.0f, w, h);
+			textSize.height += _leading * (count - 1);
+			self.size = CGSizeMake(textSize.width + _padding * 2.0f, textSize.height + _padding * 2.0f);
 		}
+		self.textSize = textSize;
 	}
-	return _line;
+	return _lines;
 }
 
 - (void) drawInContext:(CGContextRef)ctx
 {
 	[super drawInContext:ctx];
 	
+	NSArray * lines = self.lines;
+	
 	CGRect bounds = self.bounds;
-	CTLineRef line = self.line;
 	
 	CGContextSaveGState(ctx);
 	CGContextConcatCTM(ctx, [self nodeToStageTransform]);
@@ -172,22 +262,43 @@
 	CGContextConcatCTM(ctx, atm);
 	
 	// 2. drawing text
-	CGFloat dx = bounds.origin.x;
-	CGFloat dy = bounds.origin.y;
-	CGRect rect = CTLineGetBoundsWithOptions(line, kCTLineBoundsIncludeLanguageExtents);
-	if (!CGRectEqualToRect(rect, bounds)) {
-		if (_alignment == S2TextAlignmentCenter) {
-			dx += (bounds.size.width - rect.size.width) * 0.5f;
-		} else if (_alignment == S2TextAlignmentRight) {
-			dx += bounds.size.width - rect.size.width;
-		}
-		dy += (bounds.size.height - rect.size.height) * 0.5f;
-		// considering origin point
-		dx -= rect.origin.x;
-		dy -= rect.origin.y;
+	CGFloat dx, dy;
+	if (_verticalAlignment == S2TextAlignmentTop) {
+		dy = bounds.size.height - _padding;
+	} else if (_verticalAlignment == S2TextAlignmentBottom) {
+		dy = _textSize.height + _padding;
+	} else {
+		NSAssert(_verticalAlignment == S2TextAlignmentMiddle, @"default alignment middle");
+		dy = bounds.size.height * 0.5f + _textSize.height * 0.5f;
 	}
-	CGContextSetTextPosition(ctx, dx, dy);
-	CTLineDraw(line, ctx);
+	
+	S2LabelLine * label;
+	if (_alignment == S2TextAlignmentLeft) {
+		dx = _padding;
+		S2_FOR_EACH(label, lines) {
+			dy -= label.size.height;
+			CGContextSetTextPosition(ctx, dx, dy);
+			CTLineDraw(label.line, ctx);
+			dy -= _leading;
+		}
+	} else if (_alignment == S2TextAlignmentRight) {
+		S2_FOR_EACH(label, lines) {
+			dx = bounds.size.width - _padding - label.size.width;
+			dy -= label.size.height;
+			CGContextSetTextPosition(ctx, dx, dy);
+			CTLineDraw(label.line, ctx);
+			dy -= _leading;
+		}
+	} else {
+		NSAssert(_alignment == S2TextAlignmentCenter, @"default alignment center");
+		S2_FOR_EACH(label, lines) {
+			dx = (bounds.size.width - label.size.width) * 0.5f;
+			dy -= label.size.height;
+			CGContextSetTextPosition(ctx, dx, dy);
+			CTLineDraw(label.line, ctx);
+			dy -= _leading;
+		}
+	}
 	
 	// 3. restore the matrix of current context
 	CGContextConcatCTM(ctx, CGAffineTransformInvert(atm));

@@ -14,23 +14,38 @@ typedef NS_ENUM(NSUInteger, S2TextAlignment) {
 	S2TextAlignmentRight  = 2,
 };
 
+typedef NS_ENUM(NSUInteger, S2TextVerticalAlignment) {
+	S2TextAlignmentTop   = 0,
+	S2TextAlignmentMiddle = 1,
+	S2TextAlignmentBottom = 2,
+};
+
 @interface S2Label : S2Node {
 	
 	NSString * _text;
-	CGColorRef _color;
+	NSArray * _lines;
 	
+	CGColorRef _color;
 	NSString * _fontName;
 	CGFloat _fontSize;
 	
+	CGFloat _padding;
+	CGFloat _leading;
+	
 	S2TextAlignment _alignment;
+	S2TextVerticalAlignment _verticalAlignment;
 }
 
 @property(nonatomic, retain) NSString * text;
-@property(nonatomic, readwrite) CGColorRef color;
 
+@property(nonatomic, readwrite) CGColorRef color;
 @property(nonatomic, retain) NSString * fontName;
 @property(nonatomic, readwrite) CGFloat fontSize;
 
-@property(nonatomic, readwrite) S2TextAlignment alignment;
+@property(nonatomic, readwrite) CGFloat padding;
+@property(nonatomic, readwrite) CGFloat leading; // row spacing
+
+@property(nonatomic, readwrite) S2TextAlignment alignment; // default is Center
+@property(nonatomic, readwrite) S2TextVerticalAlignment verticalAlignment; // default is Middle
 
 @end

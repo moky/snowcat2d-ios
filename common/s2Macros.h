@@ -35,6 +35,19 @@
     })                                                                         \
                                     /* EOF 'CGImageCreateCopyWithImageInRect' */
 
+#define CTLineGetSize(line)                                                    \
+    ({                                                                         \
+        CGFloat __a, __d, __l;                                                 \
+        double __w = CTLineGetTypographicBounds((line), &__a, &__d, &__l);     \
+        CGSizeMake(__w, __a + __d + __l);                                      \
+    })                                                                         \
+                                                       /* EOF 'CTLineGetSize' */
+
+//------------------------------------------------------------------------- safe
+#define CFRetainSafe(ref)  if (ref) CFRetain(ref)
+#define CFReleaseSafe(ref) if (ref) CFRelease(ref)
+
+
 //--------------------------------------------------------------------- for each
 #define S2_FOR_EACH(item, array)                                               \
     for (NSEnumerator * __e = [(array) objectEnumerator];                      \
