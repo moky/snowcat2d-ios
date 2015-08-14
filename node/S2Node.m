@@ -128,9 +128,10 @@
 		// 5. anchor point
 		CGRect bounds = self.bounds;
 		CGPoint anchorPoint = self.anchorPoint;
-		CGPoint anchorPointInPixels = CGPointMake(bounds.size.width * anchorPoint.x, bounds.size.height * anchorPoint.y);
-		if (!CGPointEqualToPoint(anchorPointInPixels, CGPointZero)) {
-			transform = CGAffineTransformTranslate(transform, -anchorPointInPixels.x, -anchorPointInPixels.y);
+		if (!CGPointEqualToPoint(anchorPoint, CGPointZero)) {
+			transform = CGAffineTransformTranslate(transform,
+												   -bounds.size.width * anchorPoint.x,
+												   -bounds.size.height * anchorPoint.y);
 		}
 		
 		// 6. origin
