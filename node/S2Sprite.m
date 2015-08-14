@@ -48,7 +48,8 @@
 /* designated initializer */
 - (instancetype) initWithTexture:(S2Texture *)texture rect:(CGRect)rect rotated:(BOOL)rotated
 {
-	CGRect frame = rotated ? CGRectMake(rect.origin.x, rect.origin.y, rect.size.height, rect.size.width) : rect;
+	CGRect frame = rotated ? CGRectMake(rect.origin.x, rect.origin.y,
+										rect.size.height, rect.size.width) : rect;
 	self = [super initWithFrame:frame];
 	if (self) {
 		self.texture = texture;
@@ -241,7 +242,8 @@
 			return NULL;
 		}
 		
-		if (CGPointEqualToPoint(rect.origin, CGPointZero) && CGSizeEqualToSize(rect.size, texture.size)) {
+		if (CGPointEqualToPoint(rect.origin, CGPointZero) &&
+			CGSizeEqualToSize(rect.size, texture.size)) {
 			// draw the whole texture
 			_imageRef = CGImageRetain(texture.imageRef);
 		} else {
@@ -280,18 +282,21 @@
 	//
 	//  DRAWING
 	//
-	CGContextSaveGState(ctx);
-	CGContextConcatCTM(ctx, [self nodeToStageTransform]);
 	
-	// affine transform matrix for rotated texture
 	CGAffineTransform atm = CGAffineTransformIdentity;
 	if (rotated) {
-		atm = CGAffineTransformTranslate(atm, bounds.size.width, bounds.size.height);
+		// affine transform matrix for rotated texture
+		atm = CGAffineTransformTranslate(atm, bounds.origin.x + bounds.size.width,
+										 bounds.origin.y + bounds.size.height);
 		atm = CGAffineTransformRotate(atm, -M_PI_2);
-		atm = CGAffineTransformScale(atm, bounds.size.height / rect.size.width, -bounds.size.width / rect.size.height);
+		atm = CGAffineTransformScale(atm, bounds.size.height / rect.size.width,
+									 -bounds.size.width / rect.size.height);
 	} else {
-		atm = CGAffineTransformTranslate(atm, 0.0f, bounds.size.height);
-		atm = CGAffineTransformScale(atm, bounds.size.width / rect.size.width, -bounds.size.height / rect.size.height);
+		// affine transform matrix for normal texture
+		atm = CGAffineTransformTranslate(atm, bounds.origin.x,
+										 bounds.origin.y + bounds.size.height);
+		atm = CGAffineTransformScale(atm, bounds.size.width / rect.size.width,
+									 -bounds.size.height / rect.size.height);
 	}
 	
 	// 1. transform the matrix of current context for drawing texture
@@ -303,8 +308,6 @@
 	
 	// 3. restore the matrix of current context
 	CGContextConcatCTM(ctx, CGAffineTransformInvert(atm));
-	
-	CGContextRestoreGState(ctx);
 }
 
 @end

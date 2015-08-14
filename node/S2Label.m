@@ -303,12 +303,13 @@
 	
 	CGRect bounds = self.bounds;
 	
-	CGContextSaveGState(ctx);
-	CGContextConcatCTM(ctx, [self nodeToStageTransform]);
+	//
+	//  DRAWING
+	//
 	
 	// affine transform matrix for rotated text
 	CGAffineTransform atm = CGAffineTransformIdentity;
-	atm = CGAffineTransformTranslate(atm, 0.0f, bounds.size.height);
+	atm = CGAffineTransformTranslate(atm, bounds.origin.x, bounds.origin.y + bounds.size.height);
 	atm = CGAffineTransformScale(atm, 1.0f, -1.0f);
 	
 	// 1. transform the matrix of current context for drawing texture
@@ -378,8 +379,6 @@
 	
 	// 3. restore the matrix of current context
 	CGContextConcatCTM(ctx, CGAffineTransformInvert(atm));
-	
-	CGContextRestoreGState(ctx);
 }
 
 @end

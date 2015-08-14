@@ -12,12 +12,11 @@
 #ifdef S2_DEBUG
 void S2DrawSkeleton(CGContextRef ctx, const CGRect rect, const CGPoint anchorPoint)
 {
-	// style
-	CGContextSetLineCap(ctx, kCGLineCapSquare);
-	CGContextSetLineWidth(ctx, 1.0f);
 	CGContextBeginPath(ctx);
 	
 	// 1. draw frame
+	CGContextSetLineCap(ctx, kCGLineCapSquare);
+	CGContextSetLineWidth(ctx, 1.0f);
 	CGContextSetRGBStrokeColor(ctx, 0.0f, 1.0f, 0.0f, 0.5f);
 	
 	CGContextMoveToPoint(ctx,    rect.origin.x,                   rect.origin.y);
@@ -27,12 +26,15 @@ void S2DrawSkeleton(CGContextRef ctx, const CGRect rect, const CGPoint anchorPoi
 	CGContextAddLineToPoint(ctx, rect.origin.x,                   rect.origin.y);
 	CGContextStrokePath(ctx);
 	
-	static const CGFloat len = 2.0f;
-	
 	// 2. draw anchor point
 	CGContextSetLineCap(ctx, kCGLineCapRound);
+	CGContextSetLineWidth(ctx, 3.0f);
 	CGContextSetRGBStrokeColor(ctx, 1.0f, 0.0f, 0.0f, 1.0f);
-	CGPoint point = CGPointMake(rect.size.width * anchorPoint.x, rect.size.height * anchorPoint.y);
+	
+	CGPoint point = CGPointMake(rect.origin.x + rect.size.width * anchorPoint.x,
+								rect.origin.y + rect.size.height * anchorPoint.y);
+	
+	static const CGFloat len = 4.0f;
 	
 	CGContextMoveToPoint(ctx, point.x - len, point.y);
 	CGContextAddLineToPoint(ctx, point.x + len, point.y);
@@ -82,9 +84,11 @@ void S2DrawSkeleton(CGContextRef ctx, const CGRect rect, const CGPoint anchorPoi
 		return;
 	}
 	
-	NSArray * children = self.children;
-	if (children) {
-		NSEnumerator * enumerator = [children objectEnumerator];
+	CGContextSaveGState(ctx);
+	CGContextConcatCTM(ctx, self.transform);
+	
+	if ([_children count] > 0) {
+		NSEnumerator * enumerator = [_children objectEnumerator];
 		S2Node * child = [enumerator nextObject];
 		
 		// draw children zOrder < 0
@@ -98,10 +102,7 @@ void S2DrawSkeleton(CGContextRef ctx, const CGRect rect, const CGPoint anchorPoi
 		
 #ifdef S2_DEBUG
 		// draw skeleton for debug
-		CGContextSaveGState(ctx);
-		CGContextConcatCTM(ctx, [self nodeToStageTransform]);
-		S2DrawSkeleton(ctx, _bounds, _anchorPoint);
-		CGContextRestoreGState(ctx);
+		S2DrawSkeleton(ctx, self.bounds, self.anchorPoint);
 #endif
 		
 		// draw children zOrder >= 0
@@ -111,7 +112,14 @@ void S2DrawSkeleton(CGContextRef ctx, const CGRect rect, const CGPoint anchorPoi
 		}
 	} else {
 		[self drawInContext:ctx];
+		
+#ifdef S2_DEBUG
+		// draw skeleton for debug
+		S2DrawSkeleton(ctx, self.bounds, self.anchorPoint);
+#endif
 	}
+	
+	CGContextRestoreGState(ctx);
 }
 
 @end

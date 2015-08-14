@@ -27,20 +27,34 @@
 
 - (void) dealloc
 {
-	S2Stage * s = (S2Stage *)self.layer;
-	[s onExit];
+	S2Stage * stage = self.stage;
+	if (stage.running) {
+		[stage onExit];
+	}
 	
 	self.tapGestureRecognizer = nil;
 	
 	[super dealloc];
 }
 
+- (void) _initializeS2View
+{
+	// active gesture recognizer
+	self.userInteractionEnabled = NO;
+	self.userInteractionEnabled = YES;
+	
+	// start state
+	S2Stage * stage = self.stage;
+	if (stage.running == NO) {
+		[stage onEnter];
+	}
+}
+
 - (instancetype) initWithCoder:(NSCoder *)aDecoder
 {
 	self = [super initWithCoder:aDecoder];
 	if (self) {
-		self.userInteractionEnabled = NO;
-		self.userInteractionEnabled = YES;
+		[self _initializeS2View];
 	}
 	return self;
 }
@@ -50,19 +64,14 @@
 {
 	self = [super initWithFrame:frame];
 	if (self) {
-		self.userInteractionEnabled = NO;
-		self.userInteractionEnabled = YES;
+		[self _initializeS2View];
 	}
 	return self;
 }
 
 - (S2Stage *) stage
 {
-	S2Stage * s = (S2Stage *)self.layer;
-	if (s.running == NO) {
-		[s onEnter];
-	}
-	return s;
+	return (S2Stage *)self.layer;
 }
 
 - (void) setNeedsDisplay

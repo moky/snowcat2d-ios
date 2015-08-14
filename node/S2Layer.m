@@ -98,13 +98,9 @@
 	//
 	//  DRAWING
 	//
-	CGContextSaveGState(ctx);
-	CGContextConcatCTM(ctx, [self nodeToStageTransform]);
 	
 	CGContextSetFillColorWithColor(ctx, _color);
 	CGContextFillRect(ctx, bounds);
-	
-	CGContextRestoreGState(ctx);
 }
 
 @end

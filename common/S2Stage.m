@@ -46,10 +46,7 @@
 
 - (void) dealloc
 {
-	[self removeAllChildrenWithCleanup:YES];
 	self.children = nil;
-	
-	self.running = NO;
 	
 	[super dealloc];
 }
@@ -69,6 +66,16 @@
 #endif
 	}
 	return self;
+}
+
+- (void) setChildren:(NSMutableArray *)children
+{
+	if (_children != children) {
+		[children retain];
+		[self removeAllChildrenWithCleanup:YES];
+		[_children release];
+		_children = children;
+	}
 }
 
 - (void) setRunning:(BOOL)running

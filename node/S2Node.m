@@ -94,38 +94,51 @@
 - (CGAffineTransform) transform
 {
 	if (_isTransformDirty) {
-		_transform = CGAffineTransformIdentity;
-		
-		CGPoint anchorPointInPixels = CGPointMake(_bounds.size.width * _anchorPoint.x, _bounds.size.height * _anchorPoint.y);
+		CGAffineTransform transform = CGAffineTransformIdentity;
 		
 		// 1. position
-		if (!CGPointEqualToPoint(_position, CGPointZero)) {
-			_transform = CGAffineTransformTranslate(_transform, _position.x, _position.y);
+		CGPoint position = self.position;
+		if (!CGPointEqualToPoint(position, CGPointZero)) {
+			transform = CGAffineTransformTranslate(transform, position.x, position.y);
 		}
 		
 		// 2. rotation
-		if (_rotation != 0.0f) {
-			_transform = CGAffineTransformRotate(_transform, _rotation);
+		CGFloat rotation = self.rotation;
+		if (rotation != 0.0f) {
+			transform = CGAffineTransformRotate(transform, rotation);
 		}
 		
 		// 3. skew
-		if (_skewX != 0.0f || _skewY != 0.0f) {
+		CGFloat skewX = self.skewX;
+		CGFloat skewY = self.skewY;
+		if (skewX != 0.0f || skewY != 0.0f) {
 			// create a skewed coordinate system
-			CGAffineTransform skew = CGAffineTransformMake(1.0f, tanf(_skewY), tanf(_skewX), 1.0f, 0.0f, 0.0f);
+			CGAffineTransform skew = CGAffineTransformMake(1.0f, tanf(skewY), tanf(skewX), 1.0f, 0.0f, 0.0f);
 			// apply the skew to the transform
-			_transform = CGAffineTransformConcat(skew, _transform);
+			transform = CGAffineTransformConcat(skew, transform);
 		}
 		
 		// 4. scale
-		if (_scaleX != 1.0f || _scaleY != 1.0f) {
-			_transform = CGAffineTransformScale(_transform, _scaleX, _scaleY);
+		CGFloat scaleX = self.scaleX;
+		CGFloat scaleY = self.scaleY;
+		if (scaleX != 1.0f || scaleY != 1.0f) {
+			transform = CGAffineTransformScale(transform, scaleX, scaleY);
 		}
 		
 		// 5. anchor point
+		CGRect bounds = self.bounds;
+		CGPoint anchorPoint = self.anchorPoint;
+		CGPoint anchorPointInPixels = CGPointMake(bounds.size.width * anchorPoint.x, bounds.size.height * anchorPoint.y);
 		if (!CGPointEqualToPoint(anchorPointInPixels, CGPointZero)) {
-			_transform = CGAffineTransformTranslate(_transform, -anchorPointInPixels.x, -anchorPointInPixels.y);
+			transform = CGAffineTransformTranslate(transform, -anchorPointInPixels.x, -anchorPointInPixels.y);
 		}
 		
+		// 6. origin
+		if (!CGPointEqualToPoint(bounds.origin, CGPointZero)) {
+			transform = CGAffineTransformTranslate(transform, -bounds.origin.x, -bounds.origin.y);
+		}
+		
+		_transform = transform;
 		_isTransformDirty = NO;
 	}
 	return _transform;
