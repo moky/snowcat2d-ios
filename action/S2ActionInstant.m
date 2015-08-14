@@ -47,7 +47,8 @@
 - (void) startWithTarget:(id)target
 {
 	[super startWithTarget:target];
-	NSAssert([target isKindOfClass:[S2Node class]], @"target must be a node: %@", target);
+	NSAssert([target isKindOfClass:[S2Node class]],
+			 @"target must be a node: %@", target);
 	((S2Node *)target).visible = YES;
 }
 
@@ -63,7 +64,8 @@
 - (void) startWithTarget:(id)target
 {
 	[super startWithTarget:target];
-	NSAssert([target isKindOfClass:[S2Node class]], @"target must be a node: %@", target);
+	NSAssert([target isKindOfClass:[S2Node class]],
+			 @"target must be a node: %@", target);
 	((S2Node *)target).visible = NO;
 }
 
@@ -79,7 +81,8 @@
 - (void) startWithTarget:(id)target
 {
 	[super startWithTarget:target];
-	NSAssert([target isKindOfClass:[S2Node class]], @"target must be a node: %@", target);
+	NSAssert([target isKindOfClass:[S2Node class]],
+			 @"target must be a node: %@", target);
 	((S2Node *)target).visible = !(((S2Node *)target).visible);
 }
 
@@ -134,7 +137,8 @@
 {
 	[super startWithTarget:target];
 	// execute
-	NSAssert([_targetCallback respondsToSelector:_selector], @"error target & selector");
+	NSAssert([_targetCallback respondsToSelector:_selector],
+			 @"error target & selector");
 	[_targetCallback performSelector:_selector];
 }
 

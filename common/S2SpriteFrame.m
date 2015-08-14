@@ -54,7 +54,8 @@
 
 - (instancetype) initWithTexture:(S2Texture *)texture
 {
-	CGRect rect = CGRectMake(0.0f, 0.0f, texture.size.width, texture.size.height);
+	CGRect rect = CGRectMake(0.0f, 0.0f,
+							 texture.size.width, texture.size.height);
 	return [self initWithTexture:texture rect:rect rotated:NO];
 }
 
@@ -73,10 +74,11 @@
 
 - (S2Texture *) texture
 {
-	if (!_texture || _texture.size.width <= 0.0f || _texture.size.height <= 0.0f) {
+	if (_texture.size.width <= 0.0f || _texture.size.height <= 0.0f) {
 		NSAssert(false, @"texture error");
-		return NULL;
+		return nil;
 	}
+	NSAssert(_texture, @"texture error");
 	return _texture;
 }
 
@@ -94,7 +96,8 @@
 	if (_rect.size.width <= 0.0f || _rect.size.height <= 0.0f) {
 		S2Texture * texture = self.texture;
 		if (texture) {
-			self.rect = CGRectMake(0.0f, 0.0f, texture.size.width, texture.size.height);
+			self.rect = CGRectMake(0.0f, 0.0f,
+								   texture.size.width, texture.size.height);
 		}
 	}
 	return _rect;
@@ -128,7 +131,8 @@
 			return NULL;
 		}
 		
-		if (CGPointEqualToPoint(rect.origin, CGPointZero) && CGSizeEqualToSize(rect.size, texture.size)) {
+		if (CGPointEqualToPoint(rect.origin, CGPointZero) &&
+			CGSizeEqualToSize(rect.size, texture.size)) {
 			// the whole texture
 			_imageRef = CGImageRetain(texture.imageRef);
 		} else {

@@ -236,7 +236,8 @@
 
 - (S2ActionInterval *) reverse
 {
-	return [[[self class] alloc] initWithAction:[_innerAction reverse] times:_times];
+	return [[[self class] alloc] initWithAction:[_innerAction reverse]
+										  times:_times];
 }
 
 @end
@@ -283,9 +284,12 @@
 
 - (instancetype) initWithActionOne:(S2FiniteTimeAction *)action1 two:(S2FiniteTimeAction *)action2
 {
-	NSAssert(action1 != nil && action2 != nil, @"arguments must not be nil");
-	NSAssert(action1 != _action1 && action1 != _action2, @"re-init with the same arguments is not supported");
-	NSAssert(action2 != _action1 && action2 != _action2, @"re-init with the same arguments is not supported");
+	NSAssert(action1 != nil && action2 != nil,
+			 @"arguments must not be nil");
+	NSAssert(action1 != _action1 && action1 != _action2,
+			 @"re-init with the same arguments is not supported");
+	NSAssert(action2 != _action1 && action2 != _action2,
+			 @"re-init with the same arguments is not supported");
 	
 	s2Time duration = action1.duration + action2.duration;
 	self = [self initWithDuration:duration];
@@ -326,7 +330,8 @@
 
 + (instancetype) actionOne:(S2FiniteTimeAction *)action1 two:(S2FiniteTimeAction *)action2
 {
-	S2Sequence * sequence = [[S2Sequence alloc] initWithActionOne:action1 two:action2];
+	S2Sequence * sequence = [[S2Sequence alloc] initWithActionOne:action1
+															  two:action2];
 	return [sequence autorelease];
 }
 
@@ -376,7 +381,8 @@
 
 - (S2ActionInterval *) reverse
 {
-	return [[self class] actionOne:[_action2 reverse] two:[_action1 reverse]];
+	return [[self class] actionOne:[_action2 reverse]
+							   two:[_action1 reverse]];
 }
 
 @end
@@ -385,9 +391,12 @@
 
 - (instancetype) initWithActionOne:(S2FiniteTimeAction *)action1 two:(S2FiniteTimeAction *)action2
 {
-	NSAssert(action1 != nil && action2 != nil, @"arguments must not be nil");
-	NSAssert(action1 != _action1 && action1 != _action2, @"re-init with the same arguments is not supported");
-	NSAssert(action2 != _action1 && action2 != _action2, @"re-init with the same arguments is not supported");
+	NSAssert(action1 != nil && action2 != nil,
+			 @"arguments must not be nil");
+	NSAssert(action1 != _action1 && action1 != _action2,
+			 @"re-init with the same arguments is not supported");
+	NSAssert(action2 != _action1 && action2 != _action2,
+			 @"re-init with the same arguments is not supported");
 	
 	S2FiniteTimeAction * act1 = action1;
 	S2FiniteTimeAction * act2 = action2;
@@ -397,10 +406,12 @@
 	
 	if (d1 > d2) {
 		self = [self initWithDuration:d1];
-		act2 = [S2Sequence actionOne:action2 two:[S2DelayTime actionWithDuration:(d1 - d2)]];
+		act2 = [S2Sequence actionOne:action2
+								 two:[S2DelayTime actionWithDuration:(d1 - d2)]];
 	} else {
 		self = [self initWithDuration:d2];
-		act1 = [S2Sequence actionOne:action1 two:[S2DelayTime actionWithDuration:(d2 - d1)]];
+		act1 = [S2Sequence actionOne:action1
+								 two:[S2DelayTime actionWithDuration:(d2 - d1)]];
 	}
 	
 	if (self) {
@@ -427,7 +438,8 @@
 
 - (S2ActionInterval *) reverse
 {
-	return [[self class] actionOne:[_action1 reverse] two:[_action2 reverse]];
+	return [[self class] actionOne:[_action1 reverse]
+							   two:[_action2 reverse]];
 }
 
 @end

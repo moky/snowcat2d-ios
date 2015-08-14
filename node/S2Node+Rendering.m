@@ -27,14 +27,12 @@ void S2DrawSkeleton(CGContextRef ctx, const CGRect rect, const CGPoint anchorPoi
 	CGContextStrokePath(ctx);
 	
 	// 2. draw anchor point
-	CGContextSetLineCap(ctx, kCGLineCapRound);
-	CGContextSetLineWidth(ctx, 3.0f);
 	CGContextSetRGBStrokeColor(ctx, 1.0f, 0.0f, 0.0f, 1.0f);
 	
 	CGPoint point = CGPointMake(rect.origin.x + rect.size.width * anchorPoint.x,
 								rect.origin.y + rect.size.height * anchorPoint.y);
 	
-	static const CGFloat len = 4.0f;
+	static const CGFloat len = 2.0f;
 	
 	CGContextMoveToPoint(ctx, point.x - len, point.y);
 	CGContextAddLineToPoint(ctx, point.x + len, point.y);

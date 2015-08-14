@@ -87,7 +87,8 @@
 		
 		UITapGestureRecognizer * recognizer = nil;
 		if (userInteractionEnabled) {
-			recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(_handleTapGesture:)];
+			recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self
+																 action:@selector(_handleTapGesture:)];
 			recognizer = [recognizer autorelease];
 		}
 		self.tapGestureRecognizer = recognizer;
@@ -128,13 +129,15 @@
 		if (child.isVisible == NO) {
 			continue;
 		}
-		if (child.isTouchEnabled && CGRectContainsPoint(child.bounds, [child convertToNodeSpace:pointInStage])) {
+		if (child.isTouchEnabled &&
+			CGRectContainsPoint(child.bounds, [child convertToNodeSpace:pointInStage])) {
 			return child; // got it
 		}
 	}
 	
 	// check self
-	if (node.isTouchEnabled && CGRectContainsPoint(node.bounds, [node convertToNodeSpace:pointInStage])) {
+	if (node.isTouchEnabled &&
+		CGRectContainsPoint(node.bounds, [node convertToNodeSpace:pointInStage])) {
 		return node; // got it
 	}
 	
@@ -143,7 +146,8 @@
 		if (child.isVisible == NO) {
 			continue;
 		}
-		if (child.isTouchEnabled && CGRectContainsPoint(child.bounds, [child convertToNodeSpace:pointInStage])) {
+		if (child.isTouchEnabled &&
+			CGRectContainsPoint(child.bounds, [child convertToNodeSpace:pointInStage])) {
 			return child; // got it
 		}
 	}

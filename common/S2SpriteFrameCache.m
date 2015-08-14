@@ -75,7 +75,8 @@ S2_IMPLEMENT_SINGLETON_FUNCTIONS(getInstance)
 	}
 	
 	// check the format
-	NSAssert(format >= 0 && format <= 3, @"WARNING: format is not supported for SpriteFrameCache addSpriteFramesWithDictionary:texture:");
+	NSAssert(format >= 0 && format <= 3,
+			 @"WARNING: format is not supported for SpriteFrameCache addSpriteFramesWithDictionary:texture:");
 	
 	S2SpriteFrame * spriteFrame;
 	
@@ -106,7 +107,9 @@ S2_IMPLEMENT_SINGLETON_FUNCTIONS(getInstance)
 			CGRect rect = CGRectMake(x, y, w, h);
 			
 			// create sprite frame
-			spriteFrame = [[S2SpriteFrame alloc] initWithTexture:texture rect:rect rotated:NO];
+			spriteFrame = [[S2SpriteFrame alloc] initWithTexture:texture
+															rect:rect
+														 rotated:NO];
 		}
 		else if (format == 1 || format == 2)
 		{
@@ -122,7 +125,9 @@ S2_IMPLEMENT_SINGLETON_FUNCTIONS(getInstance)
 //			CGSize sourceSize = CGSizeFromString([frameDict objectForKey:@"sourceSize"]);
 			
 			// create frame
-			spriteFrame = [[S2SpriteFrame alloc] initWithTexture:texture rect:frame rotated:rotated];
+			spriteFrame = [[S2SpriteFrame alloc] initWithTexture:texture
+															rect:frame
+														 rotated:rotated];
 		}
 		else if (format == 3)
 		{
@@ -138,13 +143,16 @@ S2_IMPLEMENT_SINGLETON_FUNCTIONS(getInstance)
 			S2_FOR_EACH(alias, aliases) {
 				// setObject:frameName forKey:alias
 				@synchronized(_aliases) {
-					NSAssert(![_aliases objectForKey:alias], @"an alias with name %@ already exists", alias);
+					NSAssert(![_aliases objectForKey:alias],
+							 @"an alias with name %@ already exists", alias);
 					[_aliases setObject:frameName forKey:alias];
 				}
 			}
 			
 			// create frame
-			spriteFrame = [[S2SpriteFrame alloc] initWithTexture:texture rect:textureRect rotated:textureRotated];
+			spriteFrame = [[S2SpriteFrame alloc] initWithTexture:texture
+															rect:textureRect
+														 rotated:textureRotated];
 		}
 		
 		[self addSpriteFrame:spriteFrame name:frameName];
@@ -232,7 +240,8 @@ S2_IMPLEMENT_SINGLETON_FUNCTIONS(getInstance)
 		
 		[keysToRemove release];
 		
-		S2Log(@"removed %u / %u item(s) in texture cache", (unsigned int)count, (unsigned int)total);
+		S2Log(@"removed %u / %u item(s) in texture cache",
+			  (unsigned int)count, (unsigned int)total);
 	}
 }
 

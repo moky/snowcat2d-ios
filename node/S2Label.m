@@ -249,7 +249,8 @@
 				[mArray addObject:string];
 				continue;
 			}
-			NSAssert([string isKindOfClass:[NSString class]], @"each line must be a string");
+			NSAssert([string isKindOfClass:[NSString class]],
+					 @"each line must be a string");
 			// trim
 			
 			text = CFStringCreateWithNSString(string);
@@ -309,7 +310,9 @@
 	
 	// affine transform matrix for rotated text
 	CGAffineTransform atm = CGAffineTransformIdentity;
-	atm = CGAffineTransformTranslate(atm, bounds.origin.x, bounds.origin.y + bounds.size.height);
+	atm = CGAffineTransformTranslate(atm,
+									 bounds.origin.x,
+									 bounds.origin.y + bounds.size.height);
 	atm = CGAffineTransformScale(atm, 1.0f, -1.0f);
 	
 	// 1. transform the matrix of current context for drawing texture
@@ -329,7 +332,8 @@
 	S2LabelLine * label;
 	S2_FOR_EACH(label, lines) {
 		position.y -= label.bounds.size.height;
-		if (position.y < _paddingBottom || position.y > (bounds.size.height - _paddingTop)) {
+		if (position.y < _paddingBottom ||
+			position.y > (bounds.size.height - _paddingTop)) {
 			// skip this line
 			position.y -= label.bounds.origin.y + _leading;
 			continue;

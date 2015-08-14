@@ -99,7 +99,9 @@
 		// 1. position
 		CGPoint position = self.position;
 		if (!CGPointEqualToPoint(position, CGPointZero)) {
-			transform = CGAffineTransformTranslate(transform, position.x, position.y);
+			transform = CGAffineTransformTranslate(transform,
+												   position.x,
+												   position.y);
 		}
 		
 		// 2. rotation
@@ -113,7 +115,12 @@
 		CGFloat skewY = self.skewY;
 		if (skewX != 0.0f || skewY != 0.0f) {
 			// create a skewed coordinate system
-			CGAffineTransform skew = CGAffineTransformMake(1.0f, tanf(skewY), tanf(skewX), 1.0f, 0.0f, 0.0f);
+			CGAffineTransform skew = CGAffineTransformMake(1.0f,
+														   tanf(skewY),
+														   tanf(skewX),
+														   1.0f,
+														   0.0f,
+														   0.0f);
 			// apply the skew to the transform
 			transform = CGAffineTransformConcat(skew, transform);
 		}
@@ -127,16 +134,18 @@
 		
 		// 5. anchor point
 		CGRect bounds = self.bounds;
-		CGPoint anchorPoint = self.anchorPoint;
-		if (!CGPointEqualToPoint(anchorPoint, CGPointZero)) {
+		CGPoint ap = self.anchorPoint;
+		if (!CGPointEqualToPoint(ap, CGPointZero)) {
 			transform = CGAffineTransformTranslate(transform,
-												   -bounds.size.width * anchorPoint.x,
-												   -bounds.size.height * anchorPoint.y);
+												   -bounds.size.width * ap.x,
+												   -bounds.size.height * ap.y);
 		}
 		
 		// 6. origin
 		if (!CGPointEqualToPoint(bounds.origin, CGPointZero)) {
-			transform = CGAffineTransformTranslate(transform, -bounds.origin.x, -bounds.origin.y);
+			transform = CGAffineTransformTranslate(transform,
+												   -bounds.origin.x,
+												   -bounds.origin.y);
 		}
 		
 		_transform = transform;
@@ -201,7 +210,8 @@
 
 - (CGFloat) scale
 {
-	NSAssert(_scaleX == _scaleY, @"scaleX != scaleY, don't know which to return");
+	NSAssert(_scaleX == _scaleY,
+			 @"scaleX != scaleY, don't know which to return");
 	return _scaleX;
 }
 
@@ -324,7 +334,9 @@
 
 - (S2Action *) runAction:(S2Action *)action
 {
-	[[S2ActionManager getInstance] addAction:action target:self paused:!_running];
+	[[S2ActionManager getInstance] addAction:action
+									  target:self
+									  paused:!_running];
 	return action;
 }
 
@@ -355,7 +367,9 @@
 
 - (void) scheduleTickWithPriority:(NSInteger)priority
 {
-	[[S2Scheduler getInstance] scheduleTickForTarget:self priority:priority paused:!_running];
+	[[S2Scheduler getInstance] scheduleTickForTarget:self
+											priority:priority
+											  paused:!_running];
 }
 
 - (void) unscheduleTick
@@ -370,14 +384,19 @@
 
 - (void) schedule:(SEL)selector interval:(s2Time)seconds
 {
-	NSAssert(selector && [self respondsToSelector:selector], @"selector error: %@", NSStringFromSelector(selector));
+	NSAssert(selector && [self respondsToSelector:selector],
+			 @"selector error: %@", NSStringFromSelector(selector));
 	NSAssert(seconds >= 0, @"interval must be positive");
-	[[S2Scheduler getInstance] scheduleSelector:selector forTarget:self interval:seconds paused:!_running];
+	[[S2Scheduler getInstance] scheduleSelector:selector
+									  forTarget:self
+									   interval:seconds
+										 paused:!_running];
 }
 
 - (void) unschedule:(SEL)selector
 {
-	NSAssert(selector && [self respondsToSelector:selector], @"selector error: %@", NSStringFromSelector(selector));
+	NSAssert(selector && [self respondsToSelector:selector],
+			 @"selector error: %@", NSStringFromSelector(selector));
 	[[S2Scheduler getInstance] unscheduleSelector:selector forTarget:self];
 }
 

@@ -16,7 +16,8 @@
 	if ([name rangeOfString:@"/"].location == NSNotFound) {
 		return [UIImage imageNamed:name];
 	}
-	if ([name rangeOfString:@"://"].location == NSNotFound && ![name hasPrefix:@"file://"]) {
+	if ([name rangeOfString:@"://"].location == NSNotFound &&
+		![name hasPrefix:@"file://"]) {
 		return [UIImage imageWithContentsOfFile:name];
 	}
 	NSURL * url = [NSURL URLWithString:name];

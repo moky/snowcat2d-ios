@@ -112,7 +112,9 @@ S2_IMPLEMENT_SINGLETON_FUNCTIONS(getInstance)
 	
 	_running = YES;
 	
-	NSThread * thread = [[NSThread alloc] initWithTarget:self selector:@selector(mainLoop) object:nil];
+	NSThread * thread = [[NSThread alloc] initWithTarget:self
+												selector:@selector(mainLoop)
+												  object:nil];
 	[thread start];
 	[thread release];
 }
@@ -134,7 +136,9 @@ S2_IMPLEMENT_SINGLETON_FUNCTIONS(getInstance)
 		@synchronized(_stages) {
 			S2Stage * stage;
 			S2_FOR_EACH(stage, _stages) {
-				[stage performSelectorOnMainThread:@selector(redraw) withObject:nil waitUntilDone:NO];
+				[stage performSelectorOnMainThread:@selector(redraw)
+										withObject:nil
+									 waitUntilDone:NO];
 			}
 		}
 		

@@ -16,8 +16,12 @@
 #endif
 
 
-#define s2sleep(seconds) usleep((seconds) * 1000000)
-#define s2difftime(timeval2, timeval1) (((timeval2).tv_sec - (timeval1).tv_sec) + ((timeval2).tv_usec - (timeval1).tv_usec) / 1000000.0f)
+#define s2sleep(microseconds) usleep((microseconds) * 1000000)
+
+#define s2difftime(timeval2, timeval1)                                         \
+    (((timeval2).tv_sec - (timeval1).tv_sec) +                                 \
+     ((timeval2).tv_usec - (timeval1).tv_usec) / 1000000.0f)
+
 
 #define CGImageCreateCopyWithImageInRect(imageRef, rect)                       \
     ({                                                                         \

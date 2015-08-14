@@ -96,7 +96,8 @@
 -(void) startWithTarget:(id)aTarget
 {
 	[super startWithTarget:aTarget];
-	NSAssert([_innerAction isKindOfClass:[S2ActionInterval class]], @"inner action error: %@", _innerAction);
+	NSAssert([_innerAction isKindOfClass:[S2ActionInterval class]],
+			 @"inner action error: %@", _innerAction);
 	[_innerAction startWithTarget:_target];
 }
 

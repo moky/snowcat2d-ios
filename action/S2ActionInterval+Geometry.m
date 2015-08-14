@@ -27,16 +27,22 @@
 
 - (void) startWithTarget:(id)target
 {
-	NSAssert([target isKindOfClass:[S2Node class]], @"error target: %@", target);
+	NSAssert([target isKindOfClass:[S2Node class]],
+			 @"error target: %@", target);
+	
 	[super startWithTarget:target];
 	_startPoint = [(S2Node *)target position];
-	_distance = CGPointMake(_endPoint.x - _startPoint.x, _endPoint.y - _startPoint.y);
+	_distance = CGPointMake(_endPoint.x - _startPoint.x,
+							_endPoint.y - _startPoint.y);
 }
 
 - (void) update:(s2Time)time
 {
-	NSAssert([_target isKindOfClass:[S2Node class]], @"error target: %@", _target);
-	CGPoint point = CGPointMake(_startPoint.x + _distance.x * time, _startPoint.y + _distance.y * time);
+	NSAssert([_target isKindOfClass:[S2Node class]],
+			 @"error target: %@", _target);
+	
+	CGPoint point = CGPointMake(_startPoint.x + _distance.x * time,
+								_startPoint.y + _distance.y * time);
 	[(S2Node *)_target setPosition:point];
 }
 
@@ -230,7 +236,9 @@
 
 - (S2ActionInterval *) reverse
 {
-	return [[self class] actionWithDuration:_duration skewX:-_delta.x skewY:-_delta.y];
+	return [[self class] actionWithDuration:_duration
+									  skewX:-_delta.x
+									  skewY:-_delta.y];
 }
 
 @end
@@ -288,7 +296,9 @@
 
 - (S2ActionInterval *) reverse
 {
-	return [[self class] actionWithDuration:_duration scaleX:(1.0f / _endScale.x) scaleY:(1.0f - _endScale.y)];
+	return [[self class] actionWithDuration:_duration
+									 scaleX:(1.0f / _endScale.x)
+									 scaleY:(1.0f / _endScale.y)];
 }
 
 @end
@@ -418,8 +428,10 @@ static inline float bezierat(float a, float b, float c, float d, s2Time t)
 	
 	_delta.endPosition = CGPointMake(_config.endPosition.x - _startPosition.x,
 									 _config.endPosition.y - _startPosition.y);
+	
 	_delta.controlPoints[0] = CGPointMake(_config.controlPoints[0].x - _startPosition.x,
 										  _config.controlPoints[0].y - _startPosition.y);
+	
 	_delta.controlPoints[1] = CGPointMake(_config.controlPoints[1].x - _startPosition.x,
 										  _config.controlPoints[1].y - _startPosition.y);
 }
@@ -457,9 +469,13 @@ static inline float bezierat(float a, float b, float c, float d, s2Time t)
 - (S2ActionInterval *) reverse
 {
 	s2BezierConfig r;
-	r.endPosition = CGPointMake(-_config.endPosition.x, -_config.endPosition.y);
+	
+	r.endPosition = CGPointMake(-_config.endPosition.x,
+								-_config.endPosition.y);
+	
 	r.controlPoints[0] = CGPointMake(_config.controlPoints[1].x - _config.endPosition.x,
 									 _config.controlPoints[1].y - _config.endPosition.y);
+	
 	r.controlPoints[1] = CGPointMake(_config.controlPoints[0].x - _config.endPosition.x,
 									 _config.controlPoints[0].y - _config.endPosition.y);
 	

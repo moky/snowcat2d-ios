@@ -149,7 +149,8 @@ S2_IMPLEMENT_SINGLETON_FUNCTIONS(getInstance)
 		
 		[keysToRemove release];
 		
-		S2Log(@"removed %u / %u item(s) in texture cache", (unsigned int)count, (unsigned int)total);
+		S2Log(@"removed %u / %u item(s) in texture cache",
+			  (unsigned int)count, (unsigned int)total);
 	}
 }
 

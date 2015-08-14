@@ -146,7 +146,9 @@ S2_IMPLEMENT_SINGLETON_FUNCTIONS(getInstance)
 			++index;
 		}
 		// add to schedule
-		callback = [[S2SchedulerCallback alloc] initWithTarget:target selector:@selector(tick:) priority:priority];
+		callback = [[S2SchedulerCallback alloc] initWithTarget:target
+													  selector:@selector(tick:)
+													  priority:priority];
 		if (index >= [_ticks count]) {
 			[_ticks addObject:callback];
 		} else {

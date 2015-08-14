@@ -37,12 +37,16 @@
 
 - (instancetype) init
 {
-	return [self initWithTexture:nil rect:CGRectZero rotated:NO];
+	return [self initWithTexture:nil
+							rect:CGRectZero
+						 rotated:NO];
 }
 
 - (instancetype) initWithFrame:(CGRect)frame
 {
-	return [self initWithTexture:nil rect:frame rotated:NO];
+	return [self initWithTexture:nil
+							rect:frame
+						 rotated:NO];
 }
 
 /* designated initializer */
@@ -50,6 +54,7 @@
 {
 	CGRect frame = rotated ? CGRectMake(rect.origin.x, rect.origin.y,
 										rect.size.height, rect.size.width) : rect;
+	
 	self = [super initWithFrame:frame];
 	if (self) {
 		self.texture = texture;
@@ -57,7 +62,8 @@
 		self.textureRectRotated = rotated;
 		
 		if (_textureRectRotated) {
-			self.size = CGSizeMake(_textureRect.size.height, _textureRect.size.width);
+			self.size = CGSizeMake(_textureRect.size.height,
+								   _textureRect.size.width);
 		} else {
 			self.size = _textureRect.size;
 		}
@@ -67,37 +73,55 @@
 
 - (instancetype) initWithTexture:(S2Texture *)texture rect:(CGRect)rect
 {
-	return [self initWithTexture:texture rect:rect rotated:NO];
+	return [self initWithTexture:texture
+							rect:rect
+						 rotated:NO];
 }
 
 - (instancetype) initWithTexture:(S2Texture *)texture
 {
-	CGRect rect = CGRectMake(0.0f, 0.0f, texture.size.width, texture.size.height);
-	return [self initWithTexture:texture rect:rect rotated:NO];
+	CGRect rect = CGRectMake(0.0f, 0.0f,
+							 texture.size.width, texture.size.height);
+	
+	return [self initWithTexture:texture
+							rect:rect
+						 rotated:NO];
 }
 
 - (instancetype) initWithFile:(NSString *)file rect:(CGRect)rect rotated:(BOOL)rotated
 {
 	S2Texture * texture = [[S2TextureCache getInstance] addImage:file];
-	return [self initWithTexture:texture rect:rect rotated:rotated];
+	
+	return [self initWithTexture:texture
+							rect:rect
+						 rotated:rotated];
 }
 
 - (instancetype) initWithFile:(NSString *)file rect:(CGRect)rect
 {
 	S2Texture * texture = [[S2TextureCache getInstance] addImage:file];
-	return [self initWithTexture:texture rect:rect rotated:NO];
+	
+	return [self initWithTexture:texture
+							rect:rect
+						 rotated:NO];
 }
 
 - (instancetype) initWithFile:(NSString *)file
 {
 	S2Texture * texture = [[S2TextureCache getInstance] addImage:file];
-	CGRect rect = CGRectMake(0.0f, 0.0f, texture.size.width, texture.size.height);
-	return [self initWithTexture:texture rect:rect rotated:NO];
+	CGRect rect = CGRectMake(0.0f, 0.0f,
+							 texture.size.width, texture.size.height);
+	
+	return [self initWithTexture:texture
+							rect:rect
+						 rotated:NO];
 }
 
 - (instancetype) initWithSpriteFrame:(S2SpriteFrame *)spriteFrame
 {
-	self = [self initWithTexture:nil rect:spriteFrame.rect rotated:spriteFrame.rotated];
+	self = [self initWithTexture:nil
+							rect:spriteFrame.rect
+						 rotated:spriteFrame.rotated];
 	if (self) {
 		self.imageRef = spriteFrame.imageRef;
 	}
@@ -153,9 +177,11 @@
 	if (CGRectEqualToRect(_bounds, CGRectZero)) {
 		CGRect textureRect = self.textureRect;
 		if (_textureRectRotated) {
-			return CGRectMake(0.0f, 0.0f, textureRect.size.height, textureRect.size.width);
+			return CGRectMake(0.0f, 0.0f,
+							  textureRect.size.height, textureRect.size.width);
 		} else {
-			return CGRectMake(0.0f, 0.0f, textureRect.size.width, textureRect.size.height);
+			return CGRectMake(0.0f, 0.0f,
+							  textureRect.size.width, textureRect.size.height);
 		}
 	}
 	return _bounds;
@@ -187,9 +213,9 @@
 
 - (S2Texture *) texture
 {
-	if (!_texture || _texture.size.width <= 0.0f || _texture.size.height <= 0.0f) {
+	if (_texture.size.width <= 0.0f || _texture.size.height <= 0.0f) {
 		//NSAssert(false, @"texture error");
-		return NULL;
+		return nil;
 	}
 	return _texture;
 }
@@ -208,7 +234,8 @@
 	if (_textureRect.size.width <= 0.0f || _textureRect.size.height <= 0.0f) {
 		S2Texture * texture = self.texture;
 		if (texture) {
-			self.textureRect = CGRectMake(0.0f, 0.0f, texture.size.width, texture.size.height);
+			self.textureRect = CGRectMake(0.0f, 0.0f,
+										  texture.size.width, texture.size.height);
 		}
 	}
 	return _textureRect;
@@ -286,16 +313,20 @@
 	CGAffineTransform atm = CGAffineTransformIdentity;
 	if (rotated) {
 		// affine transform matrix for rotated texture
-		atm = CGAffineTransformTranslate(atm, bounds.origin.x + bounds.size.width,
+		atm = CGAffineTransformTranslate(atm,
+										 bounds.origin.x + bounds.size.width,
 										 bounds.origin.y + bounds.size.height);
 		atm = CGAffineTransformRotate(atm, -M_PI_2);
-		atm = CGAffineTransformScale(atm, bounds.size.height / rect.size.width,
+		atm = CGAffineTransformScale(atm,
+									 bounds.size.height / rect.size.width,
 									 -bounds.size.width / rect.size.height);
 	} else {
 		// affine transform matrix for normal texture
-		atm = CGAffineTransformTranslate(atm, bounds.origin.x,
+		atm = CGAffineTransformTranslate(atm,
+										 bounds.origin.x,
 										 bounds.origin.y + bounds.size.height);
-		atm = CGAffineTransformScale(atm, bounds.size.width / rect.size.width,
+		atm = CGAffineTransformScale(atm,
+									 bounds.size.width / rect.size.width,
 									 -bounds.size.height / rect.size.height);
 	}
 	

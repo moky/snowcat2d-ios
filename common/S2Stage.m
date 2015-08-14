@@ -103,7 +103,8 @@
 #endif
 	
 	[super drawInContext:ctx];
-	[_children makeObjectsPerformSelector:@selector(visitInContext:) withObject:(id)ctx];
+	[_children makeObjectsPerformSelector:@selector(visitInContext:)
+							   withObject:(id)ctx];
 	
 #ifdef S2_DEBUG
 	struct timeval time2;
@@ -145,8 +146,10 @@
 		label.font = @"Helvetica-Bold";
 		label.fontSize = 12.0f;
 		label.alignmentMode = kCAAlignmentLeft;
-		label.frame = CGRectMake(self.bounds.origin.x + 4, self.bounds.origin.y + self.bounds.size.height - 36,
-								 100, 32);
+		label.frame = CGRectMake(self.bounds.origin.x + 4,
+								 self.bounds.origin.y + self.bounds.size.height - 36,
+								 100,
+								 32);
 		label.borderWidth = 2.0f;
 		label.borderColor = [UIColor clearColor].CGColor;
 		label.foregroundColor = [UIColor whiteColor].CGColor;

@@ -77,7 +77,9 @@
 	if (self) {
 		self.targets = [NSMutableArray arrayWithCapacity:32];
 		
-		[[S2Scheduler getInstance] scheduleTickForTarget:self priority:0 paused:NO];
+		[[S2Scheduler getInstance] scheduleTickForTarget:self
+												priority:0
+												  paused:NO];
 	}
 	return self;
 }
@@ -101,7 +103,9 @@ S2_IMPLEMENT_SINGLETON_FUNCTIONS(getInstance)
 	NSAssert(action != nil, @"action cannot be nil");
 	NSAssert(target != nil, @"target cannot be nil");
 	
-	S2ActionTarget * item = [[S2ActionTarget alloc] initWithTarget:target action:action paused:paused];
+	S2ActionTarget * item = [[S2ActionTarget alloc] initWithTarget:target
+															action:action
+															paused:paused];
 	@synchronized(_targets) {
 		[_targets addObject:item];
 	}
