@@ -228,7 +228,7 @@
 		CGColorRef color = _color;
 		CFStringRef keys[] = {kCTFontAttributeName, kCTForegroundColorAttributeName};
 		CFTypeRef values[] = {font, color};
-		CFDictionaryRef attrs = CFDictionaryCreateWithKeysAndValues(keys, values);
+		CFDictionaryRef attrs = CFDictionaryCreateWithKeysAndValues((const void **)keys, (const void **)values);
 		
 		CFStringRef text;
 		CFAttributedStringRef aStr;

@@ -9,7 +9,6 @@
 #import <UIKit/UIKit.h>
 
 #import "s2Macros.h"
-#import "S2Log.h"
 #import "S2TextureCache.h"
 #import "S2SpriteFrame.h"
 #import "S2SpriteFrameCache.h"
@@ -240,8 +239,7 @@ S2_IMPLEMENT_SINGLETON_FUNCTIONS(getInstance)
 		
 		[keysToRemove release];
 		
-		S2Log(@"removed %u / %u item(s) in texture cache",
-			  (unsigned int)count, (unsigned int)total);
+		S2Log(@"removed %u / %u item(s) in texture cache", (unsigned int)count, (unsigned int)total);
 	}
 }
 

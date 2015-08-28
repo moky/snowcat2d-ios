@@ -100,7 +100,7 @@ S2_IMPLEMENT_SINGLETON_FUNCTIONS(getInstance)
 		return;
 	}
 	
-	_deltaTime = s2difftime(now, _lastTime);
+	_deltaTime = s2_difftime(now, _lastTime);
 	NSAssert(_deltaTime > 0.0f, @"time error");
 	
 	_lastTime = now;
@@ -123,7 +123,7 @@ S2_IMPLEMENT_SINGLETON_FUNCTIONS(getInstance)
 {
 	while (![[NSThread currentThread] isCancelled]) {
 		if (!_running) {
-			s2sleep(0.5); // if paused, don't consume CPU
+			s2_sleep(0.5); // if paused, don't consume CPU
 			continue;
 		}
 		
@@ -144,9 +144,9 @@ S2_IMPLEMENT_SINGLETON_FUNCTIONS(getInstance)
 		
 		float dt = kDefaultInterval - _deltaTime;
 		if (dt < 0.01f) {
-			s2sleep(0.01f);
+			s2_sleep(0.01f);
 		} else {
-			s2sleep(dt);
+			s2_sleep(dt);
 		}
 	}
 }

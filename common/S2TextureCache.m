@@ -7,8 +7,6 @@
 //
 
 #import "s2Macros.h"
-#import "S2Log.h"
-#import "S2Image.h"
 #import "S2Texture.h"
 #import "S2TextureCache.h"
 
@@ -59,7 +57,7 @@ S2_IMPLEMENT_SINGLETON_FUNCTIONS(getInstance)
 			[texture retain]; // retainCount += 1
 		} else {
 			// 2. create new one
-			UIImage * image = [S2Image imageNamed:filename];
+			UIImage * image = UIImageWithName(filename);
 			if (image) {
 				texture = [[S2Texture alloc] initWithUIImage:image]; // retainCount = 1
 				[_pool setObject:texture forKey:filename];
@@ -149,8 +147,7 @@ S2_IMPLEMENT_SINGLETON_FUNCTIONS(getInstance)
 		
 		[keysToRemove release];
 		
-		S2Log(@"removed %u / %u item(s) in texture cache",
-			  (unsigned int)count, (unsigned int)total);
+		S2Log(@"removed %u / %u item(s) in texture cache", (unsigned int)count, (unsigned int)total);
 	}
 }
 

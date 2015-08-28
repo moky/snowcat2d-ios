@@ -45,11 +45,9 @@
 //  common
 //
 #import "s2Macros.h"
-#import "S2Log.h"
 #import "s2Types.h"
 #import "S2Timer.h"
 
-#import "S2Image.h"
 #import "S2SpriteFrame.h"
 #import "S2SpriteFrameCache.h"
 #import "S2Texture.h"
