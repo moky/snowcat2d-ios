@@ -90,7 +90,7 @@ S2_IMPLEMENT_SINGLETON_FUNCTIONS(getInstance)
 {
 	@synchronized(_targets) {
 		S2ActionTarget * item;
-		S2_FOR_EACH(item, _targets) {
+		S2_FOR_EACH(_targets, item) {
 			if (item.paused == NO) {
 				[item.action tick:dt];
 			}
@@ -127,7 +127,7 @@ S2_IMPLEMENT_SINGLETON_FUNCTIONS(getInstance)
 		NSMutableArray * mArray = [[NSMutableArray alloc] initWithCapacity:[_targets count]];
 		
 		S2ActionTarget * item;
-		S2_FOR_EACH(item, _targets) {
+		S2_FOR_EACH(_targets, item) {
 			if (item.target == target) {
 				[mArray addObject:item];
 			}
@@ -144,7 +144,7 @@ S2_IMPLEMENT_SINGLETON_FUNCTIONS(getInstance)
 		NSMutableArray * mArray = [[NSMutableArray alloc] initWithCapacity:[_targets count]];
 		
 		S2ActionTarget * item;
-		S2_FOR_EACH(item, _targets) {
+		S2_FOR_EACH(_targets, item) {
 			if (item.action == action) {
 				[mArray addObject:item];
 			}
@@ -159,7 +159,7 @@ S2_IMPLEMENT_SINGLETON_FUNCTIONS(getInstance)
 {
 	@synchronized(_targets) {
 		S2ActionTarget * item;
-		S2_FOR_EACH(item, _targets) {
+		S2_FOR_EACH(_targets, item) {
 			if (item.target == target) {
 				item.paused = YES;
 			}
@@ -171,7 +171,7 @@ S2_IMPLEMENT_SINGLETON_FUNCTIONS(getInstance)
 {
 	@synchronized(_targets) {
 		S2ActionTarget * item;
-		S2_FOR_EACH(item, _targets) {
+		S2_FOR_EACH(_targets, item) {
 			if (item.target == target) {
 				item.paused = NO;
 			}

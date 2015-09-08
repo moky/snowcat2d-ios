@@ -136,7 +136,7 @@ S2_IMPLEMENT_SINGLETON_FUNCTIONS(getInstance)
 		
 		NSString * key;
 		id object;
-		S2_FOR_EACH_KEY_VALUE(key, object, _pool) {
+		S2_FOR_EACH_KEY_VALUE(_pool, key, object) {
 			if ([object retainCount] == 1) {
 				S2Log(@"removing unused texture: %@", key);
 				[keysToRemove addObject:key];

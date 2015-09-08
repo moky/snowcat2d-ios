@@ -160,7 +160,7 @@
 {
 	S2Stage * stage = self.stage;
 	S2Node * node;
-	S2_FOR_EACH_REVERSE(node, stage.children) {
+	S2_FOR_EACH_REVERSE(stage.children, node) {
 		node = [self _hitTest:pointInStage node:node];
 		if (node) {
 			break; // got it

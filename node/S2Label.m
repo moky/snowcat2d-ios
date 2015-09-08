@@ -244,7 +244,7 @@
 		}
 		
 		NSString * string;
-		S2_FOR_EACH(string, array) {
+		S2_FOR_EACH(array, string) {
 			if ([string isKindOfClass:[S2LabelLine class]]) {
 				[mArray addObject:string];
 				continue;
@@ -330,7 +330,7 @@
 	
 	CTLineRef tLine = NULL;
 	S2LabelLine * label;
-	S2_FOR_EACH(label, lines) {
+	S2_FOR_EACH(lines, label) {
 		position.y -= label.bounds.size.height;
 		if (position.y < _paddingBottom ||
 			position.y > (bounds.size.height - _paddingTop)) {

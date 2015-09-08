@@ -136,7 +136,7 @@
 - (void) _displayFPS:(float)fps drawTime:(float)dt
 {
 	CATextLayer * label;
-	S2_FOR_EACH(label, self.sublayers) {
+	S2_FOR_EACH(self.sublayers, label) {
 		if ([label isKindOfClass:[CATextLayer class]]) {
 			break;
 		}

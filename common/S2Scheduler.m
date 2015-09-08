@@ -94,14 +94,14 @@ S2_IMPLEMENT_SINGLETON_FUNCTIONS(getInstance)
 	
 	// tick selector
 	@synchronized(_ticks) {
-		S2_FOR_EACH(callback, _ticks) {
+		S2_FOR_EACH(_ticks, callback) {
 			[callback tick:dt];
 		}
 	}
 	
 	// custom selector
 	@synchronized(_timers) {
-		S2_FOR_EACH(callback, _timers) {
+		S2_FOR_EACH(_timers, callback) {
 			[callback tick:dt];
 		}
 	}
@@ -113,7 +113,7 @@ S2_IMPLEMENT_SINGLETON_FUNCTIONS(getInstance)
 		// check whether exists
 		S2Timer * timer;
 #ifndef NS_BLOCK_ASSERTIONS
-		S2_FOR_EACH(timer, _timers) {
+		S2_FOR_EACH(_timers, timer) {
 			if (timer.target == target && timer.selector == selector) {
 				NSAssert(false, @"cannot re-schedule the same target with same selector!");
 				return;
@@ -133,7 +133,7 @@ S2_IMPLEMENT_SINGLETON_FUNCTIONS(getInstance)
 	@synchronized(_ticks) {
 		NSUInteger index = 0;
 		S2SchedulerCallback * callback;
-		S2_FOR_EACH(callback, _ticks) {
+		S2_FOR_EACH(_ticks, callback) {
 #ifndef NS_BLOCK_ASSERTIONS
 			if (callback.target == target) {
 				NSAssert(false, @"cannot re-schedule the same target for 'tick:' selector!");
@@ -162,7 +162,7 @@ S2_IMPLEMENT_SINGLETON_FUNCTIONS(getInstance)
 {
 	@synchronized(_timers) {
 		S2Timer * timer;
-		S2_FOR_EACH(timer, _timers) {
+		S2_FOR_EACH(_timers, timer) {
 			if (timer.target == target && timer.selector == selector) {
 				break; // got it
 			}
@@ -179,7 +179,7 @@ S2_IMPLEMENT_SINGLETON_FUNCTIONS(getInstance)
 		NSMutableArray * mArray = [NSMutableArray arrayWithCapacity:8];
 		
 		S2Timer * timer;
-		S2_FOR_EACH(timer, _timers) {
+		S2_FOR_EACH(_timers, timer) {
 			if (timer.target == target) {
 				[mArray addObject:timer];
 			}
@@ -196,7 +196,7 @@ S2_IMPLEMENT_SINGLETON_FUNCTIONS(getInstance)
 {
 	@synchronized(_ticks) {
 		S2TickCallback * callback;
-		S2_FOR_EACH(callback, _ticks) {
+		S2_FOR_EACH(_ticks, callback) {
 			if (callback.target == target) {
 				break; // got it
 			}
@@ -230,7 +230,7 @@ S2_IMPLEMENT_SINGLETON_FUNCTIONS(getInstance)
 	// custom selectors
 	@synchronized(_timers) {
 		S2Timer * timer;
-		S2_FOR_EACH(timer, _timers) {
+		S2_FOR_EACH(_timers, timer) {
 			if (timer.target == target) {
 				timer.paused = YES;
 			}
@@ -239,7 +239,7 @@ S2_IMPLEMENT_SINGLETON_FUNCTIONS(getInstance)
 	// tick selectors
 	@synchronized(_ticks) {
 		S2TickCallback * callback;
-		S2_FOR_EACH(callback, _ticks) {
+		S2_FOR_EACH(_ticks, callback) {
 			if (callback.target == target) {
 				callback.paused = YES;
 				break; // only ONE target
@@ -253,7 +253,7 @@ S2_IMPLEMENT_SINGLETON_FUNCTIONS(getInstance)
 	// custom selectors
 	@synchronized(_timers) {
 		S2Timer * timer;
-		S2_FOR_EACH(timer, _timers) {
+		S2_FOR_EACH(_timers, timer) {
 			if (timer.target == target) {
 				timer.paused = NO;
 			}
@@ -262,7 +262,7 @@ S2_IMPLEMENT_SINGLETON_FUNCTIONS(getInstance)
 	// tick selectors
 	@synchronized(_ticks) {
 		S2TickCallback * callback;
-		S2_FOR_EACH(callback, _ticks) {
+		S2_FOR_EACH(_ticks, callback) {
 			if (callback.target == target) {
 				callback.paused = NO;
 				break; // only ONE target
@@ -276,7 +276,7 @@ S2_IMPLEMENT_SINGLETON_FUNCTIONS(getInstance)
 	// check custom selectors
 	@synchronized(_timers) {
 		S2Timer * timer;
-		S2_FOR_EACH(timer, _timers) {
+		S2_FOR_EACH(_timers, timer) {
 			if (timer.target == target) {
 				return timer.paused;
 			}
@@ -285,7 +285,7 @@ S2_IMPLEMENT_SINGLETON_FUNCTIONS(getInstance)
 	// check tick selectors
 	@synchronized(_ticks) {
 		S2TickCallback * callback;
-		S2_FOR_EACH(callback, _ticks) {
+		S2_FOR_EACH(_ticks, callback) {
 			if (callback.target == target) {
 				return callback.paused;
 			}

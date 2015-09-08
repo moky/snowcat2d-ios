@@ -81,7 +81,7 @@ S2_IMPLEMENT_SINGLETON_FUNCTIONS(getInstance)
 	
 	NSString * frameName;
 	NSDictionary * frameDict;
-	S2_FOR_EACH_KEY_VALUE(frameName, frameDict, frames) {
+	S2_FOR_EACH_KEY_VALUE(frames, frameName, frameDict) {
 		spriteFrame = nil;
 		
 		if (format == 0)
@@ -139,7 +139,7 @@ S2_IMPLEMENT_SINGLETON_FUNCTIONS(getInstance)
 			// get aliases
 			NSArray * aliases = [frameDict objectForKey:@"aliases"];
 			NSString * alias;
-			S2_FOR_EACH(alias, aliases) {
+			S2_FOR_EACH(aliases, alias) {
 				// setObject:frameName forKey:alias
 				@synchronized(_aliases) {
 					NSAssert(![_aliases objectForKey:alias],
@@ -228,7 +228,7 @@ S2_IMPLEMENT_SINGLETON_FUNCTIONS(getInstance)
 		
 		NSString * key;
 		id object;
-		S2_FOR_EACH_KEY_VALUE(key, object, _pool) {
+		S2_FOR_EACH_KEY_VALUE(_pool, key, object) {
 			if ([object retainCount] == 1) {
 				S2Log(@"removing unused sprite frame: %@", key);
 				[keysToRemove addObject:key];
@@ -289,7 +289,7 @@ S2_IMPLEMENT_SINGLETON_FUNCTIONS(getInstance)
 	@synchronized(_pool) {
 		NSString * frameName;
 		S2SpriteFrame * spriteFrame;
-		S2_FOR_EACH_KEY_VALUE(frameName, spriteFrame, _pool) {
+		S2_FOR_EACH_KEY_VALUE(_pool, frameName, spriteFrame) {
 			if (spriteFrame.texture == texture) {
 				[keysToRemove addObject:frameName];
 			}

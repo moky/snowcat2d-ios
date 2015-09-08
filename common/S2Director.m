@@ -135,7 +135,7 @@ S2_IMPLEMENT_SINGLETON_FUNCTIONS(getInstance)
 		// redraw all stages
 		@synchronized(_stages) {
 			S2Stage * stage;
-			S2_FOR_EACH(stage, _stages) {
+			S2_FOR_EACH(_stages, stage) {
 				[stage performSelectorOnMainThread:@selector(redraw)
 										withObject:nil
 									 waitUntilDone:NO];

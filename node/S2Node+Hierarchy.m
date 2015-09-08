@@ -24,7 +24,7 @@
 		[children addObject:child];
 	} else {
 		NSUInteger index = 0;
-		S2_FOR_EACH(last, children) {
+		S2_FOR_EACH(children, last) {
 			if (last.zOrder > z) {
 				break;
 			}
@@ -44,7 +44,7 @@
 + (void) node:(id<S2Node>)node removeAllChildrenWithCleanup:(BOOL)cleanup
 {
 	S2Node * child;
-	S2_FOR_EACH(child, node.children) {
+	S2_FOR_EACH(node.children, child) {
 		// IMPORTANT:
 		//   1st do onExit
 		//   2nd cleanup
@@ -93,7 +93,7 @@
 - (S2Node *) getChildByTag:(NSInteger)tag
 {
 	S2Node * child;
-	S2_FOR_EACH(child, _children) {
+	S2_FOR_EACH(_children, child) {
 		if (child.tag == tag) {
 			return child;
 		}
