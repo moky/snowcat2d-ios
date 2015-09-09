@@ -11,7 +11,7 @@
 
 @implementation S2MoveTo
 
-- (instancetype) initWithDuration:(s2Time)duration position:(CGPoint)endPoint
+- (instancetype) initWithDuration:(float)duration position:(CGPoint)endPoint
 {
 	self = [self initWithDuration:duration];
 	if (self) {
@@ -20,7 +20,7 @@
 	return self;
 }
 
-+ (instancetype) actionWithDuration:(s2Time)duration position:(CGPoint)endPoint
++ (instancetype) actionWithDuration:(float)duration position:(CGPoint)endPoint
 {
 	return [[[self alloc] initWithDuration:duration position:endPoint] autorelease];
 }
@@ -36,7 +36,7 @@
 							_endPoint.y - _startPoint.y);
 }
 
-- (void) update:(s2Time)time
+- (void) update:(float)time
 {
 	NSAssert([_target isKindOfClass:[S2Node class]],
 			 @"error target: %@", _target);
@@ -50,13 +50,13 @@
 
 @implementation S2MoveBy
 
-- (instancetype) initWithDuration:(s2Time)duration position:(CGPoint)endPoint
+- (instancetype) initWithDuration:(float)duration position:(CGPoint)endPoint
 {
 	NSAssert(false, @"use 'initWithDuration:distance:'");
 	return [self initWithDuration:duration distance:endPoint];
 }
 
-- (instancetype) initWithDuration:(s2Time)duration distance:(CGPoint)distance
+- (instancetype) initWithDuration:(float)duration distance:(CGPoint)distance
 {
 	self = [self initWithDuration:duration];
 	if (self) {
@@ -65,13 +65,13 @@
 	return self;
 }
 
-+ (instancetype) actionWithDuration:(s2Time)duration position:(CGPoint)endPoint
++ (instancetype) actionWithDuration:(float)duration position:(CGPoint)endPoint
 {
 	NSAssert(false, @"use 'actionWithDuration:distance:'");
 	return [self actionWithDuration:duration distance:endPoint];
 }
 
-+ (instancetype) actionWithDuration:(s2Time)duration distance:(CGPoint)distance
++ (instancetype) actionWithDuration:(float)duration distance:(CGPoint)distance
 {
 	return [[[self alloc] initWithDuration:duration distance:distance] autorelease];
 }
@@ -93,7 +93,7 @@
 
 @implementation S2RotateTo
 
-- (instancetype) initWithDuration:(s2Time)duration angle:(CGFloat)angle
+- (instancetype) initWithDuration:(float)duration angle:(CGFloat)angle
 {
 	self = [self initWithDuration:duration];
 	if (self) {
@@ -102,7 +102,7 @@
 	return self;
 }
 
-+ (instancetype) actionWithDuration:(s2Time)duration angle:(CGFloat)angle
++ (instancetype) actionWithDuration:(float)duration angle:(CGFloat)angle
 {
 	return [[[self alloc] initWithDuration:duration angle:angle] autorelease];
 }
@@ -126,7 +126,7 @@
 	}
 }
 
-- (void) update:(s2Time)time
+- (void) update:(float)time
 {
 	[_target setRotation:(_startAngle + _delta * time)];
 }
@@ -135,7 +135,7 @@
 
 @implementation S2RotateBy
 
-- (instancetype) initWithDuration:(s2Time)duration angle:(CGFloat)angle
+- (instancetype) initWithDuration:(float)duration angle:(CGFloat)angle
 {
 	self = [self initWithDuration:duration];
 	if (self) {
@@ -160,7 +160,7 @@
 
 @implementation S2SkewTo
 
-- (instancetype) initWithDuration:(s2Time)duration skewX:(CGFloat)sx skewY:(CGFloat)sy
+- (instancetype) initWithDuration:(float)duration skewX:(CGFloat)sx skewY:(CGFloat)sy
 {
 	self = [self initWithDuration:duration];
 	if (self) {
@@ -169,7 +169,7 @@
 	return self;
 }
 
-+ (instancetype) actionWithDuration:(s2Time)duration skewX:(CGFloat)sx skewY:(CGFloat)sy
++ (instancetype) actionWithDuration:(float)duration skewX:(CGFloat)sx skewY:(CGFloat)sy
 {
 	return [[[self alloc] initWithDuration:duration skewX:sx skewY:sy] autorelease];
 }
@@ -208,7 +208,7 @@
 	}
 }
 
-- (void) update:(s2Time)time
+- (void) update:(float)time
 {
 	[_target setSkewX:(_startSkew.x + _delta.x * time)];
 	[_target setSkewY:(_startSkew.y + _delta.y * time)];
@@ -218,7 +218,7 @@
 
 @implementation S2SkewBy
 
-- (instancetype) initWithDuration:(s2Time)duration skewX:(CGFloat)sx skewY:(CGFloat)sy
+- (instancetype) initWithDuration:(float)duration skewX:(CGFloat)sx skewY:(CGFloat)sy
 {
 	self = [super initWithDuration:duration skewX:sx skewY:sy];
 	if (self) {
@@ -245,7 +245,7 @@
 
 @implementation S2ScaleTo
 
-- (instancetype) initWithDuration:(s2Time)duration scaleX:(CGFloat)sx scaleY:(CGFloat)sy
+- (instancetype) initWithDuration:(float)duration scaleX:(CGFloat)sx scaleY:(CGFloat)sy
 {
 	self = [self initWithDuration:duration];
 	if (self) {
@@ -254,17 +254,17 @@
 	return self;
 }
 
-- (instancetype) initWithDuration:(s2Time)duration scale:(CGFloat)scale
+- (instancetype) initWithDuration:(float)duration scale:(CGFloat)scale
 {
 	return [self initWithDuration:duration scaleX:scale scaleY:scale];
 }
 
-+ (instancetype) actionWithDuration:(s2Time)duration scaleX:(CGFloat)sx scaleY:(CGFloat)sy
++ (instancetype) actionWithDuration:(float)duration scaleX:(CGFloat)sx scaleY:(CGFloat)sy
 {
 	return [[[self alloc] initWithDuration:duration scaleX:sx scaleY:sy] autorelease];
 }
 
-+ (instancetype) actionWithDuration:(s2Time)duration scale:(CGFloat)scale
++ (instancetype) actionWithDuration:(float)duration scale:(CGFloat)scale
 {
 	return [self actionWithDuration:duration scaleX:scale scaleY:scale];
 }
@@ -277,7 +277,7 @@
 						 _endScale.y - _startScale.y);
 }
 
-- (void) update:(s2Time)time
+- (void) update:(float)time
 {
 	[_target setScaleX:(_startScale.x + _delta.x * time)];
 	[_target setScaleY:(_startScale.y + _delta.y * time)];
@@ -307,7 +307,7 @@
 
 @implementation S2JumpTo
 
-- (instancetype) initWithDuration:(s2Time)duration position:(CGPoint)position height:(s2Time)height jumps:(NSUInteger)jumps
+- (instancetype) initWithDuration:(float)duration position:(CGPoint)position height:(float)height jumps:(NSUInteger)jumps
 {
 	self = [self initWithDuration:duration];
 	if (self) {
@@ -318,7 +318,7 @@
 	return self;
 }
 
-+ (instancetype) actionWithDuration:(s2Time)duration position:(CGPoint)position height:(s2Time)height jumps:(NSUInteger)jumps
++ (instancetype) actionWithDuration:(float)duration position:(CGPoint)position height:(float)height jumps:(NSUInteger)jumps
 {
 	return [[[self alloc] initWithDuration:duration position:position height:height jumps:jumps] autorelease];
 }
@@ -331,7 +331,7 @@
 						 _endPosition.y - _startPosition.y);
 }
 
-- (void) update:(s2Time)time
+- (void) update:(float)time
 {
 	// Sin jump. Less realistic
 //	CGFloat ss = _height * fabsf(sinf(time * (CGFloat)M_PI * _jumps));
@@ -350,13 +350,13 @@
 
 @implementation S2JumpBy
 
-- (instancetype) initWithDuration:(s2Time)duration position:(CGPoint)position height:(s2Time)height jumps:(NSUInteger)jumps
+- (instancetype) initWithDuration:(float)duration position:(CGPoint)position height:(float)height jumps:(NSUInteger)jumps
 {
 	NSAssert(false, @"use 'initWithDuration:distance:height:jumps:'");
 	return [self initWithDuration:duration distance:position height:height jumps:jumps];
 }
 
-- (instancetype) initWithDuration:(s2Time)duration distance:(CGPoint)distance height:(s2Time)height jumps:(NSUInteger)jumps
+- (instancetype) initWithDuration:(float)duration distance:(CGPoint)distance height:(float)height jumps:(NSUInteger)jumps
 {
 	self = [self initWithDuration:duration];
 	if (self) {
@@ -367,13 +367,13 @@
 	return self;
 }
 
-+ (instancetype) actionWithDuration:(s2Time)duration position:(CGPoint)position height:(s2Time)height jumps:(NSUInteger)jumps
++ (instancetype) actionWithDuration:(float)duration position:(CGPoint)position height:(float)height jumps:(NSUInteger)jumps
 {
 	NSAssert(false, @"use 'actionWithDuration:distance:height:jumps:'");
 	return [self actionWithDuration:duration distance:position height:height jumps:jumps];
 }
 
-+ (instancetype) actionWithDuration:(s2Time)duration distance:(CGPoint)distance height:(s2Time)height jumps:(NSUInteger)jumps
++ (instancetype) actionWithDuration:(float)duration distance:(CGPoint)distance height:(float)height jumps:(NSUInteger)jumps
 {
 	return [[[self alloc] initWithDuration:duration distance:distance height:height jumps:jumps] autorelease];
 }
@@ -397,7 +397,7 @@
 //	((1 - t) + t)3 = 1
 // Expands to…
 //   (1 - t)3 + 3t(1-t)2 + 3t2(1 - t) + t3 = 1
-static inline float bezierat(float a, float b, float c, float d, s2Time t)
+static inline float bezierat(float a, float b, float c, float d, float t)
 {
 	return (powf(1 - t, 3) * a +
 			3 * t * (powf(1 - t, 2)) * b +
@@ -407,7 +407,7 @@ static inline float bezierat(float a, float b, float c, float d, s2Time t)
 
 @implementation S2BezierTo
 
-- (instancetype) initWithDuration:(s2Time)duration bezier:(s2BezierConfig)config
+- (instancetype) initWithDuration:(float)duration bezier:(s2BezierConfig)config
 {
 	self = [self initWithDuration:duration];
 	if (self) {
@@ -416,7 +416,7 @@ static inline float bezierat(float a, float b, float c, float d, s2Time t)
 	return self;
 }
 
-+ (instancetype) actionWithDuration:(s2Time)duration bezier:(s2BezierConfig)config
++ (instancetype) actionWithDuration:(float)duration bezier:(s2BezierConfig)config
 {
 	return [[[self alloc] initWithDuration:duration bezier:config] autorelease];
 }
@@ -436,7 +436,7 @@ static inline float bezierat(float a, float b, float c, float d, s2Time t)
 										  _config.controlPoints[1].y - _startPosition.y);
 }
 
-- (void) update:(s2Time)time
+- (void) update:(float)time
 {
 	float xa = 0;
 	float xb = _delta.controlPoints[0].x;

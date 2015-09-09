@@ -25,4 +25,19 @@
 #define S2_FOR_EACH_REVERSE_SAFE(array, item)         S9_FOR_EACH_REVERSE_SAFE((array), (item))
 #define S2_FOR_EACH_KEY_VALUE(dict, key, value)       S9_FOR_EACH_KEY_VALUE((dict), (key), (value))
 
+//
+//  timer
+//
+#define S2Scheduler                                   S9Scheduler
+
+//
+//  action
+//
+#define S2ActionManager                               S9ActionManager
+
+#define S2Action                                      S9Action
+#define S2FiniteTimeAction                            S9FiniteTimeAction
+#define S2ActionInstant                               S9ActionInstant
+#define S2ActionInterval                              S9ActionInterval
+
 #endif

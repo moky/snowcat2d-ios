@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <CoreGraphics/CoreGraphics.h>
 
+#import "s2Macros.h"
 #import "s2Types.h"
 
 @protocol S2Node <NSObject>
@@ -51,8 +52,6 @@
 - (void) removeAllChildrenWithCleanup:(BOOL)cleanup;
 
 @end
-
-@class S2Action;
 
 @interface S2Node : NSObject<S2Node> {
 	
@@ -162,7 +161,7 @@
  
  If the selector is already scheduled, then the interval parameter will be updated without scheduling it again.
  */
-- (void) schedule:(SEL)selector interval:(s2Time)seconds;
+- (void) schedule:(SEL)selector interval:(float)seconds;
 
 /** unschedules a custom selector.*/
 - (void) unschedule:(SEL)selector;

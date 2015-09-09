@@ -10,7 +10,6 @@
 #import <UIKit/UIKit.h>
 #import <CoreText/CoreText.h>
 
-#import "s2Macros.h"
 #import "S2Node+Rendering.h"
 #import "S2Label.h"
 

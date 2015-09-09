@@ -31,6 +31,4 @@ typedef struct _s2Color4F {
 	float a;
 } s2Color4F;
 
-typedef float s2Time;
-
 #endif

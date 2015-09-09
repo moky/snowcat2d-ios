@@ -6,9 +6,6 @@
 //  Copyright (c) 2015 Slanissue.com. All rights reserved.
 //
 
-#import "s2Macros.h"
-#import "S2Scheduler.h"
-#import "S2ActionManager.h"
 #import "S2Node+Hierarchy.h"
 #import "S2Node.h"
 
@@ -382,7 +379,7 @@
 	[self schedule:selector interval:0];
 }
 
-- (void) schedule:(SEL)selector interval:(s2Time)seconds
+- (void) schedule:(SEL)selector interval:(float)seconds
 {
 	NSAssert(selector && [self respondsToSelector:selector],
 			 @"selector error: %@", NSStringFromSelector(selector));

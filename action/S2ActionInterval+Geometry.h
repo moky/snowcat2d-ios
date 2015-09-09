@@ -19,8 +19,8 @@
 	CGPoint _distance;
 }
 
-- (instancetype) initWithDuration:(s2Time)duration position:(CGPoint)endPoint;
-+ (instancetype) actionWithDuration:(s2Time)duration position:(CGPoint)endPoint;
+- (instancetype) initWithDuration:(float)duration position:(CGPoint)endPoint;
++ (instancetype) actionWithDuration:(float)duration position:(CGPoint)endPoint;
 
 @end
 
@@ -30,8 +30,8 @@
  */
 @interface S2MoveBy : S2MoveTo
 
-- (instancetype) initWithDuration:(s2Time)duration distance:(CGPoint)distance;
-+ (instancetype) actionWithDuration:(s2Time)duration distance:(CGPoint)distance;
+- (instancetype) initWithDuration:(float)duration distance:(CGPoint)distance;
++ (instancetype) actionWithDuration:(float)duration distance:(CGPoint)distance;
 
 @end
 
@@ -46,8 +46,8 @@
 	CGFloat _delta;
 }
 
-- (instancetype) initWithDuration:(s2Time)duration angle:(CGFloat)angle;
-+ (instancetype) actionWithDuration:(s2Time)duration angle:(CGFloat)angle;
+- (instancetype) initWithDuration:(float)duration angle:(CGFloat)angle;
++ (instancetype) actionWithDuration:(float)duration angle:(CGFloat)angle;
 
 @end
 
@@ -66,8 +66,8 @@
 	CGPoint _delta;
 }
 
-- (instancetype) initWithDuration:(s2Time)duration skewX:(CGFloat)sx skewY:(CGFloat)sy;
-+ (instancetype) actionWithDuration:(s2Time)duration skewX:(CGFloat)sx skewY:(CGFloat)sy;
+- (instancetype) initWithDuration:(float)duration skewX:(CGFloat)sx skewY:(CGFloat)sy;
++ (instancetype) actionWithDuration:(float)duration skewX:(CGFloat)sx skewY:(CGFloat)sy;
 
 @end
 
@@ -86,10 +86,10 @@
 	CGPoint _delta;
 }
 
-- (instancetype) initWithDuration:(s2Time)duration scaleX:(CGFloat)sx scaleY:(CGFloat)sy;
-- (instancetype) initWithDuration:(s2Time)duration scale:(CGFloat)scale;
-+ (instancetype) actionWithDuration:(s2Time)duration scaleX:(CGFloat)sx scaleY:(CGFloat)sy;
-+ (instancetype) actionWithDuration:(s2Time)duration scale:(CGFloat)scale;
+- (instancetype) initWithDuration:(float)duration scaleX:(CGFloat)sx scaleY:(CGFloat)sy;
+- (instancetype) initWithDuration:(float)duration scale:(CGFloat)scale;
++ (instancetype) actionWithDuration:(float)duration scaleX:(CGFloat)sx scaleY:(CGFloat)sy;
++ (instancetype) actionWithDuration:(float)duration scale:(CGFloat)scale;
 
 @end
 
@@ -108,19 +108,19 @@
 	CGPoint _startPosition;
 	CGPoint _endPosition;
 	CGPoint _delta;
-	s2Time _height;
+	float _height;
 	NSUInteger _jumps;
 }
 
-- (instancetype) initWithDuration:(s2Time)duration position:(CGPoint)position height:(s2Time)height jumps:(NSUInteger)jumps;
-+ (instancetype) actionWithDuration:(s2Time)duration position:(CGPoint)position height:(s2Time)height jumps:(NSUInteger)jumps;
+- (instancetype) initWithDuration:(float)duration position:(CGPoint)position height:(float)height jumps:(NSUInteger)jumps;
++ (instancetype) actionWithDuration:(float)duration position:(CGPoint)position height:(float)height jumps:(NSUInteger)jumps;
 
 @end
 
 @interface S2JumpBy : S2JumpTo
 
-- (instancetype) initWithDuration:(s2Time)duration distance:(CGPoint)distance height:(s2Time)height jumps:(NSUInteger)jumps;
-+ (instancetype) actionWithDuration:(s2Time)duration distance:(CGPoint)distance height:(s2Time)height jumps:(NSUInteger)jumps;
+- (instancetype) initWithDuration:(float)duration distance:(CGPoint)distance height:(float)height jumps:(NSUInteger)jumps;
++ (instancetype) actionWithDuration:(float)duration distance:(CGPoint)distance height:(float)height jumps:(NSUInteger)jumps;
 
 @end
 
@@ -142,8 +142,8 @@ typedef struct _s2BezierConfig {
 	s2BezierConfig _delta;
 }
 
-- (instancetype) initWithDuration:(s2Time)duration bezier:(s2BezierConfig)config;
-+ (instancetype) actionWithDuration:(s2Time)duration bezier:(s2BezierConfig)config;
+- (instancetype) initWithDuration:(float)duration bezier:(s2BezierConfig)config;
++ (instancetype) actionWithDuration:(float)duration bezier:(s2BezierConfig)config;
 
 @end
 

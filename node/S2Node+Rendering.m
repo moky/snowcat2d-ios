@@ -6,7 +6,6 @@
 //  Copyright (c) 2015 Slanissue.com. All rights reserved.
 //
 
-#import "s2Macros.h"
 #import "S2Node+Rendering.h"
 
 #ifdef S2_DEBUG

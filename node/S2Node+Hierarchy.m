@@ -6,7 +6,6 @@
 //  Copyright (c) 2015 Slanissue.com. All rights reserved.
 //
 
-#import "s2Macros.h"
 #import "S2Node+Hierarchy.h"
 
 @implementation S2Node (Common)

@@ -20,12 +20,9 @@
 //
 //  action
 //
-#import "S2Action.h"
-#import "S2FiniteTimeAction.h"
 #import "S2ActionInstant.h"
 #import "S2ActionInterval.h"
 #import "S2ActionInterval+Geometry.h"
-#import "S2ActionInterval+Visibility.h"
 
 //
 //  node
@@ -46,7 +43,6 @@
 //
 #import "s2Macros.h"
 #import "s2Types.h"
-#import "S2Timer.h"
 
 #import "S2SpriteFrame.h"
 #import "S2SpriteFrameCache.h"
@@ -56,8 +52,6 @@
 #import "S2Stage.h"
 #import "S2View.h"
 
-#import "S2ActionManager.h"
-#import "S2Scheduler.h"
 #import "S2Director.h"
 
 NSString * snowcat2dVersion(void);

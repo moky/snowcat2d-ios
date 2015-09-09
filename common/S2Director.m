@@ -8,9 +8,6 @@
 
 #include <sys/time.h>
 
-#import "s2Macros.h"
-#import "s2Types.h"
-#import "S2Scheduler.h"
 #import "S2Director.h"
 
 #define kDefaultFPS 60.0f // 60 frames per second
@@ -21,7 +18,7 @@
 	/* last time the main loop was updated */
 	struct timeval _lastTime;
 	/* delta time since last tick to main loop */
-	s2Time _deltaTime;
+	float _deltaTime;
 }
 
 @property(nonatomic, retain) NSMutableArray * stages;

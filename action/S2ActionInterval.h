@@ -6,103 +6,70 @@
 //  Copyright (c) 2015 Slanissue.com. All rights reserved.
 //
 
-#import "S2FiniteTimeAction.h"
+#import "s2Macros.h"
+#import "s2Types.h"
 
-/** An interval action is an action that takes place within a certain period of time.
- It has an start time, and a finish time. The finish time is the parameter
- duration plus the start time.
- 
- These ActionInterval actions have some interesting properties, like:
- - They can run normally (default)
- - They can run reversed with the reverse method
- - They can run with the time altered with the Accelerate, AccelDeccel and Speed actions.
- 
- For example, you can simulate a Ping Pong effect running the action normally and
- then running it again in Reverse mode.
- 
- Example:
- 
-	S2Action * pingPongAction = [S2Sequence actions: action, [action reverse], nil];
+/** Blinks a Node object by modifying it's visible attribute
  */
-@interface S2ActionInterval : S2FiniteTimeAction {
+@interface S2Blink : S2ActionInterval {
 	
-	//! elapsed time in seconds
-	s2Time _elapsed;
-}
-
-/** how many seconds had elapsed since the actions started to run. */
-@property(nonatomic, readonly) s2Time elapsed;
-
-- (instancetype) initWithDuration:(s2Time)duration;
-
-+ (instancetype) actionWithDuration:(s2Time)duration;
-
-/** returns a reversed action */
-- (S2ActionInterval *) reverse;
-
-@end
-
-#pragma mark -
-
-/** Delays the action a certain amount of seconds
- */
-@interface S2DelayTime : S2ActionInterval
-
-@end
-
-/** Executes an action in reverse order, from time=duration to time=0
- 
- @warning Use this action carefully. This action is not
- sequenceable. Use it as the default "reversed" method
- of your own actions, but using it outside the "reversed"
- scope is not recommended.
- */
-@interface S2ReverseTime : S2ActionInterval {
-	
-	S2FiniteTimeAction * _innerAction;
-}
-
-- (instancetype) initWithAction:(S2FiniteTimeAction *)action;
-+ (instancetype) actionWithAction:(S2FiniteTimeAction *)action;
-
-@end
-
-/** Repeats an action a number of times.
- * To repeat an action forever use the S2RepeatForever action.
- */
-@interface S2Repeat : S2ActionInterval {
-	
-	S2FiniteTimeAction * _innerAction;
 	NSUInteger _times;
-	NSUInteger _total;
 }
 
-- (instancetype) initWithAction:(S2FiniteTimeAction *)action times:(NSUInteger)times;
-
-+ (instancetype) actionWithAction:(S2FiniteTimeAction *)action times:(NSUInteger)times;
-
-@end
-
-/** Runs actions sequentially, one after another
- */
-@interface S2Sequence : S2ActionInterval
-
-/** initializes the action */
-- (instancetype) initWithActionOne:(S2FiniteTimeAction *)action1 two:(S2FiniteTimeAction *)action2;
-
-/** helper contructor to create an array of sequenceable actions */
-+ (instancetype) actions:(S2FiniteTimeAction *)action1, ... NS_REQUIRES_NIL_TERMINATION;
-
-/** helper contructor to create an array of sequenceable actions given an array */
-+ (instancetype) actionsWithArray:(NSArray *)actions;
-
-/** creates the action */
-+ (instancetype) actionOne:(S2FiniteTimeAction *)action1 two:(S2FiniteTimeAction *)action2;
+- (instancetype) initWithDuration:(float)duration blinks:(NSUInteger)blinks;
++ (instancetype) actionWithDuration:(float)duration blinks:(NSUInteger)blinks;
 
 @end
 
-/** Spawn a new action immediately
+#pragma mark Fade
+
+/** Fades In an object that implements the RGBA protocol. It modifies the opacity from 0 to 255.
+ The "reverse" of this action is FadeOut
  */
-@interface S2Spawn : S2Sequence
+@interface S2FadeIn : S2ActionInterval
+
+@end
+
+/** Fades Out an object that implements the RGBA protocol. It modifies the opacity from 255 to 0.
+ The "reverse" of this action is FadeIn
+ */
+@interface S2FadeOut : S2ActionInterval
+
+@end
+
+/** Fades an object that implements the RGBA protocol. It modifies the opacity from the current value to a custom one.
+ @warning This action doesn't support "reverse"
+ */
+@interface S2FadeTo : S2ActionInterval {
+	
+	s2Byte _fromOpacity;
+	s2Byte _toOpacity;
+}
+
+- (instancetype) initWithDuration:(float)duration opacity:(s2Byte)opacity;
++ (instancetype) actionWithDuration:(float)duration opacity:(s2Byte)opacity;
+
+@end
+
+#pragma mark Tint
+
+/** Tints a Node that implements the RGB protocol from current tint to a custom one.
+ @warning This action doesn't support "reverse"
+ */
+@interface S2TintTo : S2ActionInterval {
+	
+	s2Color3B _fromColor;
+	s2Color3B _toColor;
+	s2Color3B _delta;
+}
+
+- (instancetype) initWithDuration:(float)duration red:(s2Byte)r green:(s2Byte)g blue:(s2Byte)b;
++ (instancetype) actionWithDuration:(float)duration red:(s2Byte)r green:(s2Byte)g blue:(s2Byte)b;
+
+@end
+
+/** Tints a Node that implements the RGB protocol from current tint to a custom one.
+ */
+@interface S2TintBy : S2TintTo
 
 @end

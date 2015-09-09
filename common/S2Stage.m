@@ -10,8 +10,6 @@
 
 #import <UIKit/UIKit.h>
 
-#import "s2Macros.h"
-#import "s2Types.h"
 #import "S2Director.h"
 #import "S2Node+Hierarchy.h"
 #import "S2Node+Rendering.h"
@@ -25,8 +23,8 @@
 	
 #ifdef S2_DEBUG
 	struct timeval _lastTime;
-	s2Time _deltaTime;
-	s2Time _drawTime;
+	float _deltaTime;
+	float _drawTime;
 	NSUInteger _frames;
 #endif
 }
