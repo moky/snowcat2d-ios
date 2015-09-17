@@ -46,8 +46,6 @@
 
 #import "S2SpriteFrame.h"
 #import "S2SpriteFrameCache.h"
-#import "S2Texture.h"
-#import "S2TextureCache.h"
 
 #import "S2Stage.h"
 #import "S2View.h"

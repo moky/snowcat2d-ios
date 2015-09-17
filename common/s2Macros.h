@@ -40,4 +40,10 @@
 #define S2ActionInstant                               S9ActionInstant
 #define S2ActionInterval                              S9ActionInterval
 
+//
+//  sys
+//
+#define S2Texture                                     S9Texture
+#define S2TextureCache                                S9TextureCache
+
 #endif

@@ -7,8 +7,6 @@
 //
 
 #import "S2Node+Rendering.h"
-#import "S2Texture.h"
-#import "S2TextureCache.h"
 #import "S2SpriteFrame.h"
 #import "S2Sprite.h"
 

@@ -9,7 +9,6 @@
 #import <UIKit/UIKit.h>
 
 #import "s2Macros.h"
-#import "S2TextureCache.h"
 #import "S2SpriteFrame.h"
 #import "S2SpriteFrameCache.h"
 

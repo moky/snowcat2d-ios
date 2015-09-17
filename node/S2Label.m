@@ -227,7 +227,7 @@
 		CGColorRef color = _color;
 		CFStringRef keys[] = {kCTFontAttributeName, kCTForegroundColorAttributeName};
 		CFTypeRef values[] = {font, color};
-		CFDictionaryRef attrs = CFDictionaryCreateWithKeysAndValues((const void **)keys, (const void **)values);
+		CFDictionaryRef attrs = CFDictionaryCreateWithKeysAndValues(keys, values);
 		
 		CFStringRef text;
 		CFAttributedStringRef aStr;
@@ -236,7 +236,7 @@
 		
 		if (!_truncationToken) {
 			text = CFStringCreateWithNSString(@"...");
-			aStr = CFAttributedStringCreate(NULL, text, attrs);
+			aStr = CFAttributedStringCreate(kCFAllocatorDefault, text, attrs);
 			_truncationToken = CTLineCreateWithAttributedString(aStr);
 			CFRelease(aStr);
 			CFRelease(text);
@@ -248,12 +248,11 @@
 				[mArray addObject:string];
 				continue;
 			}
-			NSAssert([string isKindOfClass:[NSString class]],
-					 @"each line must be a string");
+			NSAssert([string isKindOfClass:[NSString class]], @"each line must be a string");
 			// trim
 			
 			text = CFStringCreateWithNSString(string);
-			aStr = CFAttributedStringCreate(NULL, text, attrs);
+			aStr = CFAttributedStringCreate(kCFAllocatorDefault, text, attrs);
 			line = CTLineCreateWithAttributedString(aStr);
 			
 			lineBounds = CTLineGetBounds(line);

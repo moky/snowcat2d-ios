@@ -7,7 +7,6 @@
 //
 
 #import "s2Macros.h"
-#import "S2Texture.h"
 #import "S2SpriteFrame.h"
 
 @interface S2SpriteFrame ()
